@@ -684,5 +684,78 @@
     --cart-secondary-font-family: var(--font-{{ settings.cart_price_font }}--family);
     --cart-secondary-font-style: var(--font-{{ settings.cart_price_font }}--style);
     --cart-secondary-font-weight: var(--font-{{ settings.cart_price_font }}--weight);
+
+    /* ─────────────────────────────────────────────────────────────
+       Beauty Luxe — Project Design Tokens
+       Fuente de verdad: beauty-luxe-theme-variables.md
+       NO hardcodear color/tipografía/espaciado en secciones — usar estas variables.
+       ───────────────────────────────────────────────────────────── */
+
+    /* Fluid Scaling — base/cap globales (sobreescribibles por sección) */
+    --fluid-base: 1440;
+    --fluid-cap:  2560;
+
+    /* Color Tokens */
+    --color-dark-100:     #0A0A0A;
+    --color-dark-80:      #525252;
+    --color-dark-60:      #6C6C6C;
+    --color-white-100:    #FFFFFF;
+    --color-white-80:     #D6D6D6;
+    --color-white-60:     #A9A9A9;
+    --color-border-dark:  #E7E7E7;
+    --color-border-light: #3D3D3D;
+    --color-bg-gray:      #F6F6F8;
+    --color-accent:       #FEDC5C;
+    --color-green-main:   #008236;
+    --color-green-bg:     #0D8756;
+
+    /* Typography — Font Families (alias Horizon settings-driven vars) */
+    --font-heading: var(--font-heading--family);
+    --font-body:    var(--font-body--family);
+    --font-ui:      var(--font-accent--family);
+
+    /* Typography — Size Scale */
+    --type-h2-size:             32px;
+    --type-h2-weight:           400;
+    --type-h2-lh:               1.2;
+
+    --type-h3-size:             24px;
+    --type-h3-weight:           400;
+    --type-h3-lh:               1.2;
+
+    --type-accordion-size:      20px;
+    --type-accordion-weight:    400;
+    --type-accordion-lh:        1.2;
+
+    --type-p-lg-size:           16px;
+    --type-p-lg-weight-medium:  500;
+    --type-p-lg-weight-light:   300;
+    --type-p-lg-lh:             1.5;
+
+    --type-p-sm-size:           14px;
+    --type-p-sm-weight-regular: 400;
+    --type-p-sm-weight-medium:  500;
+    --type-p-sm-weight-light:   300;
+    --type-p-sm-lh:             1.5;
+
+    --type-p-xs-size:           13px;
+    --type-p-xs-weight-light:   300;
+    --type-p-xs-weight-regular: 400;
+    --type-p-xs-lh:             1.5;
+
+    --type-button-size:         14px;
+    --type-button-weight:       500;
+    --type-button-lh:           1.5;
+
+    --type-logo-size:           26.245px;
+    --type-logo-weight:         700;
+    --type-logo-lh:             normal;
+
+    /* Layout */
+    --layout-content-padding: 80px;
+    --layout-content-width:   1280px;
+    --layout-col-left:        738px;
+    --layout-col-gap:         52px;
+    --layout-col-right:       486px;
   }
 {% endstyle %}

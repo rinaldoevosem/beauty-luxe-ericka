@@ -1,0 +1,15 @@
+/* ─────────────────────────────────────────────────────────────
+   Beauty Luxe — Fluid Scaling Tokens
+   Convención: --fluid-{mobile}-{desktop}
+   Fórmula:    clamp(MOBILEpx,
+                     calc(DESKTOP / var(--fluid-base) * 100vw),
+                     calc(DESKTOP / var(--fluid-base) * var(--fluid-cap) * 1px))
+   Ver:        .claude/rules/css-rules.md → "Fluid Scaling System"
+   Globales:   --fluid-base y --fluid-cap viven en theme-styles-variables.liquid
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* Los tokens se agregan orgánicamente conforme se construyen las secciones. */
+  /* Ejemplo (NO incluir hasta que el dev de Figma provea valores mobile+desktop): */
+  /* --fluid-28-48: clamp(28px, calc(48 / var(--fluid-base) * 100vw), calc(48 / var(--fluid-base) * var(--fluid-cap) * 1px)); */
+}
