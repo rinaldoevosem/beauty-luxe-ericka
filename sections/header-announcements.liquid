@@ -1,216 +1,149 @@
+{% doc %}
+  Renders the Beauty Luxe announcement bar at the top of the storefront.
 
+  - 40px full-width bar with centered, single-line copy.
+  - Renders one block statically; rotates between 2-5 blocks with a CSS-only fade.
+  - Uses Beauty Luxe design tokens from `snippets/theme-styles-variables.liquid`:
+    `--color-dark-100`, `--color-white-100`, `--font-body`, `--type-p-sm-*`.
 
-{% if section.blocks.size > 1 %}
-  <script
-    src="{{ 'announcement-bar.js' | asset_url }}"
-    type="module"
-    fetchpriority="low"
-  ></script>
-{% endif %}
+  @example
+  Rendered via `sections/header-group.json` with section type `header-announcements`.
+{% enddoc %}
 
-<div class="section-background color-{{ section.settings.color_scheme }}"></div>
-<aside
-  class="announcement-bar spacing-style section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }}"
-  style="{% render 'spacing-padding', settings: section.settings %}; --border-bottom-width: {{ section.settings.divider_width }}px;"
->
-  {% liquid
-    assign autoplay = false
-    assign show_arrows = false
-    if section.blocks.size > 1
-      assign autoplay = true
-      assign show_arrows = true
-    endif
-  %}
+{%- liquid
+  assign block_count = section.blocks.size
+  assign should_rotate = false
+  if block_count > 1
+    assign should_rotate = true
+  endif
+-%}
 
-  <announcement-bar-component
-    class="announcement-bar__slider"
-    {% if autoplay == true %}
-      autoplay="{{ section.settings.speed }}" aria-live="polite"
-    {% endif %}
+{%- if should_rotate -%}
+  {%- assign per_item_seconds = 4 -%}
+  {%- assign total_seconds = per_item_seconds | times: block_count -%}
+  {%- assign visible_pct = 100.0 | divided_by: block_count | round: 2 -%}
+  {%- assign visible_in = 3 -%}
+  {%- assign visible_out = visible_pct | minus: visible_in -%}
+  <style>
+    #shopify-section-{{ section.id }} {
+      --announcement-duration: {{ total_seconds }}s;
+      --announcement-count: {{ block_count }};
+    }
+
+    @keyframes announcement-rotate-{{ section.id }} {
+      0%                       { opacity: 0; }
+      {{ visible_in }}%        { opacity: 1; }
+      {{ visible_out }}%       { opacity: 1; }
+      {{ visible_pct }}%       { opacity: 0; }
+      100%                     { opacity: 0; }
+    }
+
+    #shopify-section-{{ section.id }} .announcement-bar__inner--rotating > .announcement-bar__item {
+      animation-name: announcement-rotate-{{ section.id }};
+      animation-duration: var(--announcement-duration);
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-in-out;
+      animation-delay: calc(var(--announcement-index) * (var(--announcement-duration) / var(--announcement-count)));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #shopify-section-{{ section.id }} .announcement-bar__inner--rotating > .announcement-bar__item {
+        animation: none;
+        opacity: 0;
+      }
+
+      #shopify-section-{{ section.id }} .announcement-bar__inner--rotating > .announcement-bar__item:first-child {
+        opacity: 1;
+      }
+    }
+  </style>
+{%- endif -%}
+
+{%- if block_count > 0 -%}
+  <ul
+    class="announcement-bar__inner{% if should_rotate %} announcement-bar__inner--rotating{% endif %}"
+    role="list"
   >
-    {% if show_arrows %}
-      {% render 'slideshow-arrows', icon_style: 'chevron' %}
-    {% endif %}
-
-    <div class="announcement-bar__slides">
-      {% content_for 'blocks' %}
-    </div>
-  </announcement-bar-component>
-</aside>
+    {%- for block in section.blocks -%}
+      <li
+        class="announcement-bar__item"
+        style="--announcement-index: {{ forloop.index0 }};"
+        {{ block.shopify_attributes }}
+      >
+        {{ block.settings.text }}
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}
 
 {% stylesheet %}
   .announcement-bar {
-    border-block-end: var(--border-bottom-width) solid var(--color-border);
-  }
-
-  .announcement-bar__slider {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    position: relative;
-
-    @media screen and (max-width: 749px) {
-      grid-column: 1 / -1;
-    }
-  }
-
-  .announcement-bar__slides {
-    display: grid;
-    grid: [stack] auto / [stack] auto;
-    width: calc(100% - var(--button-size) * 2);
-    max-width: 680px;
-    margin-inline: auto;
-  }
-
-  .announcement-bar__slides > * {
-    grid-area: stack;
-  }
-
-  .announcement-bar__slide {
-    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-    content-visibility: visible;
-
-    &[aria-hidden='true'] {
-      opacity: 0;
-      visibility: hidden;
-    }
-  }
-
-  .announcement-bar__slider slideshow-arrows {
-    padding: 0;
-    mix-blend-mode: normal;
-  }
-
-  .announcement-bar__slider slideshow-arrows .slideshow-control {
-    color: var(--color-foreground);
-  }
-
-  .announcement-bar__slider .slideshow-control {
-    display: flex;
-    padding: 0;
-    width: var(--button-size);
-    height: var(--button-size);
     align-items: center;
     justify-content: center;
-    opacity: 1;
-    animation: none;
-
-    @media screen and (min-width: 750px) {
-      --slideshow-control-offset: calc((var(--button-size) - var(--icon-size-xs)) / 2);
-
-      .section--page-width &.slideshow-control--previous {
-        transform: translateX(var(--slideshow-control-offset));
-      }
-    }
+    inline-size: 100%;
+    block-size: 40px;
+    padding-inline: 16px;
+    overflow: hidden;
+    background-color: var(--color-dark-100);
+    color: var(--color-white-100);
   }
 
-  .announcement-bar__slider .slideshow-control .svg-wrapper {
-    width: var(--icon-size-xs);
-    height: var(--icon-size-xs);
-  }
-
-  .announcement-bar__slide {
-    place-content: center;
-  }
-
-  .announcement-bar__text:first-child {
+  .announcement-bar__inner {
+    display: grid;
+    inline-size: 100%;
     margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .announcement-bar__link {
-    position: absolute;
-    inset: 0;
+  .announcement-bar__item {
+    grid-area: 1 / 1;
+    margin: 0;
+    overflow: hidden;
+    font-family: var(--font-body);
+    font-size: var(--type-p-sm-size);
+    font-weight: var(--type-p-sm-weight-regular);
+    line-height: var(--type-p-sm-lh);
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .announcement-bar__item > * {
+    margin: 0;
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:names.announcement_bar",
-  "blocks": [
-    {
-      "type": "_announcement"
-    }
-  ],
+  "name": "Announcement Bar",
+  "tag": "div",
+  "class": "announcement-bar",
   "enabled_on": {
     "groups": ["header"]
   },
-  "settings": [
+  "max_blocks": 5,
+  "blocks": [
     {
-      "type": "range",
-      "id": "speed",
-      "label": "t:settings.scroll_speed",
-      "min": 2,
-      "max": 10,
-      "default": 5,
-      "unit": "sec"
-    },
-    {
-      "type": "header",
-      "content": "t:content.appearance"
-    },
-    {
-      "type": "select",
-      "id": "section_width",
-      "label": "t:settings.section_width",
-      "options": [
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
         {
-          "value": "page-width",
-          "label": "t:options.page"
-        },
-        {
-          "value": "full-width",
-          "label": "t:options.full"
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Free Shipping on Orders $50+ · Earn Rewards on Every Purchase · Join Upcoming Pro Workshops →</p>"
         }
-      ],
-      "default": "page-width"
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "default": "scheme-4",
-      "label": "t:settings.color_scheme"
-    },
-    {
-      "type": "range",
-      "id": "divider_width",
-      "label": "t:settings.divider_thickness",
-      "min": 0,
-      "max": 5,
-      "step": 0.5,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "header",
-      "content": "t:content.padding"
-    },
-    {
-      "type": "range",
-      "id": "padding-block-start",
-      "label": "t:settings.top",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 15
-    },
-    {
-      "type": "range",
-      "id": "padding-block-end",
-      "label": "t:settings.bottom",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 15
+      ]
     }
   ],
   "presets": [
     {
-      "name": "t:names.announcement_bar",
+      "name": "Announcement Bar",
       "blocks": {
         "announcement_1": {
-          "type": "_announcement"
+          "type": "announcement"
         }
       },
       "block_order": ["announcement_1"]
