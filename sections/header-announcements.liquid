@@ -70,7 +70,12 @@
         style="--announcement-index: {{ forloop.index0 }};"
         {{ block.shopify_attributes }}
       >
-        {{ block.settings.text }}
+        <div class="announcement-bar__copy announcement-bar__copy--desktop">
+          {{ block.settings.text }}
+        </div>
+        <div class="announcement-bar__copy announcement-bar__copy--mobile">
+          {{ block.settings.text_mobile }}
+        </div>
       </li>
     {%- endfor -%}
   </ul>
@@ -110,8 +115,22 @@
     white-space: nowrap;
   }
 
-  .announcement-bar__item > * {
+  .announcement-bar__item * {
     margin: 0;
+  }
+
+  .announcement-bar__copy--mobile {
+    display: none;
+  }
+
+  @media (max-width: 749px) {
+    .announcement-bar__copy--desktop {
+      display: none;
+    }
+
+    .announcement-bar__copy--mobile {
+      display: block;
+    }
   }
 {% endstylesheet %}
 
@@ -132,8 +151,14 @@
         {
           "type": "richtext",
           "id": "text",
-          "label": "Text",
+          "label": "Text (desktop)",
           "default": "<p>Free Shipping on Orders $50+ · Earn Rewards on Every Purchase · Join Upcoming Pro Workshops →</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "text_mobile",
+          "label": "Text (mobile)",
+          "default": "<p>Free Shipping on Orders $50+ Join Pro →</p>"
         }
       ]
     }
