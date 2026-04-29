@@ -23,6 +23,11 @@
         {{- closest.product.title }}
       </a>
     </div>
+    {% content_for 'block',
+      type: '_product-header',
+      id: 'product-header',
+      closest.product: closest.product
+    %}
     {% content_for 'blocks' %}
   {% endcapture %}
 
@@ -46,6 +51,36 @@
     display: flex;
     align-self: start;
     justify-content: center;
+  }
+
+  /* Figma spec — Product Title text block inside the Product Info Panel.
+     Font / size / line-height / letter-spacing come from the block's own
+     `type_preset: custom` settings in product.json. Only override the bits
+     the schema can't express: exact #333333 color and exact -1px tracking. */
+  .product-details .text-block:has(> h5) h5 {
+    margin: 0;
+    font-weight: 400;
+    letter-spacing: -1px;
+    /* Non-palette color from Figma product title spec */
+    color: #333333;
+  }
+
+  /* Figma spec — SKU inside the Product Info Panel. */
+  .product-details product-sku-component {
+    display: block;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    text-align: right;
+    /* Non-palette color from Figma SKU spec */
+    color: #6C6C6C;
+  }
+
+  .product-details product-sku-component .sku::before {
+    /* "SKU" prefix per Figma spec — universal abbreviation, not localized. */
+    content: 'SKU ';
   }
 
   @media screen and (min-width: 750px) {

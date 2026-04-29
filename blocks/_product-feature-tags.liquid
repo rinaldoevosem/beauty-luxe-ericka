@@ -1,0 +1,89 @@
+{% doc %}
+  Renders a row of feature tags pulled from `product.tags`.
+
+  Each tag renders as a checkmark icon + tag text. Merchant configures the
+  tags directly on the product (Shopify admin → Tags). Limited to first 3
+  tags by default to match the Figma layout.
+
+  @example
+  {% content_for 'block', type: '_product-feature-tags', id: 'product-feature-tags', closest.product: closest.product %}
+{% enddoc %}
+
+{%- liquid
+  assign tags_product = closest.product
+  assign tag_limit = block.settings.tag_limit | default: 3
+-%}
+
+{%- if tags_product.tags.size > 0 -%}
+  <ul class="product-feature-tags" role="list">
+    {%- for tag in tags_product.tags limit: tag_limit -%}
+      <li class="product-feature-tags__item">
+        <span class="svg-wrapper product-feature-tags__icon">
+          {{- 'icon-checkmark.svg' | inline_asset_content -}}
+        </span>
+        <span class="product-feature-tags__label">{{ tag | escape }}</span>
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-feature-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .product-feature-tags__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Regular. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    /* Non-palette color from Figma feature tags spec */
+    color: #525252;
+  }
+
+  .product-feature-tags__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    /* Non-palette color from Figma feature tags spec */
+    color: #525252;
+  }
+
+  .product-feature-tags__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product feature tags",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Tags are pulled from the product's tags in the Shopify admin."
+    },
+    {
+      "type": "range",
+      "id": "tag_limit",
+      "label": "Number of tags to show",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    }
+  ]
+}
+{% endschema %}

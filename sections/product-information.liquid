@@ -183,6 +183,44 @@
 %}
 
 {% stylesheet %}
+  /* Figma PDP layout — 1440px frame, 80px content padding, two-column 738/52/486.
+     Right column is capped at 486px; left column flexes. Adapts smoothly below
+     1440px and was breaking under 1200px because the theme switched the grid
+     to a 2fr/1fr ratio that didn't respect the sidebar cap. */
+  .product-information {
+    --sidebar-width: 486px;
+  }
+
+  .product-information .product-details {
+    width: 100%;
+    max-width: var(--sidebar-width);
+    min-width: 0;
+  }
+
+  @media screen and (min-width: 1200px) {
+    .product-information .product-information__grid:not(
+        .product-information__grid--half,
+        .product-information--media-none
+      ).product-information--media-left {
+      grid-template-columns: minmax(0, 1fr) var(--sidebar-width);
+    }
+
+    .product-information .product-information__grid:not(
+        .product-information__grid--half,
+        .product-information--media-none
+      ).product-information--media-right {
+      grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    }
+  }
+
+  @media screen and (min-width: 1440px) {
+    /* Match Figma frame exactly: 1440px viewport with 80px padding each side
+       gives a 1280px content area (738 + 52 gap + 486 = 1276 ≈ spec). */
+    .product-information.section--page-width {
+      --page-margin: 80px;
+    }
+  }
+
   .sticky-add-to-cart__bar {
     position: fixed;
     bottom: 20px;

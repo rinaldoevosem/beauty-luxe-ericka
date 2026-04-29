@@ -1,0 +1,146 @@
+{% doc %}
+  Renders the main price + installment line for the Product Info Panel.
+
+  - Main price ($23.00) — Outfit Light 24px, #0A0A0A. Uses
+    `product.selected_or_first_available_variant.price` and updates dynamically
+    on variant changes via the `<product-price>` web component.
+  - Installment line — "or 4 interest-free payments of $X.XX with [PayPal] Learn More".
+    Outfit Light 13px, #6C6C6C. Inline PayPal logo (53×15px). The number of
+    installments is configurable in block settings.
+
+  @example
+  {% content_for 'block', type: '_product-price-info', id: 'product-price-info', closest.product: closest.product %}
+{% enddoc %}
+
+{%- liquid
+  assign price_product = closest.product
+  assign selected_variant = price_product.selected_or_first_available_variant
+  assign installment_count = block.settings.installment_count | default: 4
+  assign installment_amount = selected_variant.price | divided_by: installment_count | money
+  assign learn_more_url = block.settings.learn_more_url | default: 'https://www.paypal.com/us/digital-wallet/ways-to-pay/buy-now-pay-later'
+-%}
+
+<product-price
+  class="product-price-info"
+  data-block-id="{{ block.id }}"
+  data-product-id="{{ price_product.id }}"
+>
+  <div ref="priceContainer" class="product-price-info__row">
+    <span class="product-price-info__price">
+      {{- selected_variant.price | money -}}
+    </span>
+
+    {%- if block.settings.show_installments -%}
+      <span class="product-price-info__installments">
+        or {{ installment_count }} interest-free payments of
+        <span class="product-price-info__installment-amount">{{ installment_amount }}</span>
+        with
+        <span class="svg-wrapper product-price-info__paypal" aria-label="PayPal">
+          {{- 'icon-paypal.svg' | inline_asset_content -}}
+        </span>
+        <a
+          href="{{ learn_more_url }}"
+          class="product-price-info__learn-more"
+          target="_blank"
+          rel="noopener"
+        >
+          Learn More
+        </a>
+      </span>
+    {%- endif -%}
+  </div>
+</product-price>
+
+{% stylesheet %}
+  .product-price-info {
+    display: block;
+    width: 100%;
+  }
+
+  .product-price-info__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .product-price-info__price {
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    /* Non-palette color from Figma price spec */
+    color: #0A0A0A;
+  }
+
+  .product-price-info__installments {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    /* Non-palette color from Figma installment line spec */
+    color: #6C6C6C;
+  }
+
+  .product-price-info__paypal {
+    display: inline-flex;
+    align-items: center;
+    width: 53px;
+    height: 15px;
+  }
+
+  .product-price-info__paypal svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .product-price-info__learn-more {
+    /* Non-palette color from Figma installment line spec */
+    color: #6C6C6C;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .product-price-info__learn-more:hover,
+  .product-price-info__learn-more:focus-visible {
+    color: var(--color-foreground);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product price info",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_installments",
+      "label": "Show installment line",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "installment_count",
+      "label": "Number of installments",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4,
+      "visible_if": "{{ block.settings.show_installments }}"
+    },
+    {
+      "type": "url",
+      "id": "learn_more_url",
+      "label": "Learn more link",
+      "info": "Link target for the \"Learn More\" text. Defaults to PayPal Pay Later page.",
+      "visible_if": "{{ block.settings.show_installments }}"
+    }
+  ]
+}
+{% endschema %}

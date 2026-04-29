@@ -1,0 +1,126 @@
+{% doc %}
+  Renders the product header row at the top of the Product Info Panel.
+
+  Layout: flex row, space-between.
+  - Left: brand name (from `closest.product.vendor`).
+  - Right: share + favorite icon buttons (20x20, gap 8px).
+
+  Buttons are visual only — wire up share/wishlist behavior separately.
+
+  @example
+  {% content_for 'block', type: '_product-header', id: 'product-header', closest.product: closest.product %}
+{% enddoc %}
+
+{%- liquid
+  assign header_product = closest.product
+  assign brand_name = header_product.vendor
+-%}
+
+{% comment %}
+  RULE EXCEPTION: aria-labels hardcoded — locale file is auto-generated and there
+  are no existing translation keys for "Share product" / "Save to favorites".
+{% endcomment %}
+<div class="product-header">
+  <p class="product-header__brand">
+    {{- brand_name | escape -}}
+  </p>
+
+  <div class="product-header__actions">
+    <button
+      type="button"
+      class="product-header__action"
+      aria-label="Share product"
+    >
+      <span class="svg-wrapper product-header__icon">
+        {{- 'icon-share.svg' | inline_asset_content -}}
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="product-header__action"
+      aria-label="Save to favorites"
+      aria-pressed="false"
+    >
+      <span class="svg-wrapper product-header__icon">
+        {{- 'icon-heart.svg' | inline_asset_content -}}
+      </span>
+    </button>
+  </div>
+</div>
+
+{% stylesheet %}
+  .product-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .product-header__brand {
+    margin: 0;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Regular. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    /* Non-palette color from Figma product header spec */
+    color: #6C6C6C;
+  }
+
+  .product-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .product-header__action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 0;
+    background: none;
+    /* Non-palette color from Figma product header spec */
+    color: #6C6C6C;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .product-header__action:hover,
+  .product-header__action:focus-visible {
+    color: var(--color-foreground);
+  }
+
+  .product-header__action[aria-pressed='true'] {
+    color: var(--color-primary);
+  }
+
+  .product-header__action[aria-pressed='true'] svg {
+    fill: currentColor;
+  }
+
+  .product-header__icon {
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+  }
+
+  .product-header__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product header",
+  "tag": null,
+  "settings": []
+}
+{% endschema %}
