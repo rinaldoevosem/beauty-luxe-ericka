@@ -43,7 +43,7 @@
       "type": "main-nav",
       "settings": {
         "menu": "main-menu"
-      }
+      } 
     }
   },
   "order": [

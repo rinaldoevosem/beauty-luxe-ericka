@@ -15,19 +15,21 @@
 -%}
 
 {%- if menu.links.size > 0 -%}
-  <ul class="main-nav__list" role="list">
-    {%- for link in menu.links -%}
-      <li class="main-nav__item">
-        <a
-          href="{{ link.url }}"
-          class="main-nav__link"
-          {% if link.active %}aria-current="page"{% endif %}
-        >
-          {{- link.title | escape -}}
-        </a>
-      </li>
-    {%- endfor -%}
-  </ul>
+  <nav class="main-nav__inner" aria-label="Main navigation">
+    <ul class="main-nav__list" role="list">
+      {%- for link in menu.links -%}
+        <li class="main-nav__item">
+          <a
+            href="{{ link.url }}"
+            class="main-nav__link"
+            {% if link.active %}aria-current="page"{% endif %}
+          >
+            {{- link.title | escape -}}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
 {%- endif -%}
 
 {% stylesheet %}
@@ -82,7 +84,7 @@
 {% schema %}
 {
   "name": "Main navigation",
-  "tag": "nav",
+  "tag": "section",
   "class": "main-nav",
   "enabled_on": {
     "groups": ["header"]
