@@ -183,10 +183,10 @@
 %}
 
 {% stylesheet %}
-  /* Figma PDP layout — 1440px frame, 80px content padding, two-column 738/52/486.
-     Right column is capped at 486px; left column flexes. Adapts smoothly below
-     1440px and was breaking under 1200px because the theme switched the grid
-     to a 2fr/1fr ratio that didn't respect the sidebar cap. */
+  /* Figma PDP layout — fluid right column from tablet up, capping at 486px.
+     Replaces both theme rules (the 750+ `1fr min(50vw, sidebar)` and the
+     1200+ `2fr 1fr` flip) with a single clamp so the layout adapts smoothly
+     across every desktop width instead of jumping at 1200px. */
   .product-information {
     --sidebar-width: 486px;
   }
@@ -197,27 +197,32 @@
     min-width: 0;
   }
 
-  @media screen and (min-width: 1200px) {
-    .product-information .product-information__grid:not(
-        .product-information__grid--half,
-        .product-information--media-none
-      ).product-information--media-left {
-      grid-template-columns: minmax(0, 1fr) var(--sidebar-width);
+  @media screen and (min-width: 750px) {
+    /* Higher specificity than theme's `.product-information__grid:not(...).product-information--media-X`
+       (one extra `.product-information.section` qualifier) so this rule wins
+       at every desktop width without !important. */
+    .product-information.section
+      .product-information__grid.product-information--media-left:not(.product-information__grid--half):not(.product-information--media-none) {
+      grid-template-columns: minmax(0, 1fr) clamp(320px, 40%, var(--sidebar-width));
     }
 
-    .product-information .product-information__grid:not(
-        .product-information__grid--half,
-        .product-information--media-none
-      ).product-information--media-right {
-      grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    .product-information.section
+      .product-information__grid.product-information--media-right:not(.product-information__grid--half):not(.product-information--media-none) {
+      grid-template-columns: clamp(320px, 40%, var(--sidebar-width)) minmax(0, 1fr);
     }
   }
 
+
   @media screen and (min-width: 1440px) {
-    /* Match Figma frame exactly: 1440px viewport with 80px padding each side
-       gives a 1280px content area (738 + 52 gap + 486 = 1276 ≈ spec). */
+    /* Match Figma frame exactly: 1440px+ viewport with 80px padding each side
+       gives a 1280px content area; right column is already at its 486px clamp
+       cap by this width, so left flexes to fill (≈ spec's 738px).
+       Override --page-content-width too so the content stays capped at 1280
+       on wider viewports instead of growing to the theme's 1440px narrow cap. */
     .product-information.section--page-width {
       --page-margin: 80px;
+      --page-content-width: 1280px;
+      --page-width: calc(1280px + 160px);
     }
   }
 

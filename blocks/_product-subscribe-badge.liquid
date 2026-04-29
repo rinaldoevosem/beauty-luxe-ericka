@@ -1,0 +1,90 @@
+{% doc %}
+  Renders the "Subscribe & Save" pill badge.
+
+  Visual badge per Figma spec. Subscription functionality requires a third-party
+  app integration (ReCharge, Bold, or Shopify native subscriptions). The discount
+  percentage is configurable per block.
+
+  @example
+  {% content_for 'block', type: '_product-subscribe-badge', id: 'product-subscribe-badge' %}
+{% enddoc %}
+
+{%- liquid
+  assign discount_percent = block.settings.discount_percent | default: 5
+  assign label = block.settings.label | default: 'Subscribe & Save'
+-%}
+
+<div class="product-subscribe-badge" role="note">
+  <span class="svg-wrapper product-subscribe-badge__icon">
+    {{- 'icon-checkmark.svg' | inline_asset_content -}}
+  </span>
+  <span class="product-subscribe-badge__label">
+    {{- label }} {{ discount_percent }}%
+  </span>
+</div>
+
+{% stylesheet %}
+  .product-subscribe-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    /* Non-palette color from Figma subscribe badge spec */
+    background-color: rgba(13, 135, 86, 0.1);
+    /* Non-palette color from Figma subscribe badge spec */
+    border: 1px solid #008236;
+    border-radius: 50px;
+  }
+
+  .product-subscribe-badge__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    /* Non-palette color from Figma subscribe badge spec */
+    color: #008236;
+  }
+
+  .product-subscribe-badge__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .product-subscribe-badge__label {
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Regular. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 400;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    /* Non-palette color from Figma subscribe badge spec */
+    color: #008236;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product subscribe badge",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Visual badge only. Connect a subscription app (ReCharge, Bold, or Shopify Subscriptions) for the actual subscribe-and-save flow."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Subscribe & Save"
+    },
+    {
+      "type": "range",
+      "id": "discount_percent",
+      "label": "Discount %",
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "default": 5
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,81 @@
+{% doc %}
+  Renders the short description + size note for the Product Info Panel.
+
+  - Short description — Outfit Light 14px, #0A0A0A. Pulled from
+    `product.metafields.custom.short_description` with fallback to the first
+    portion of the product description.
+  - Size note — "Size 0.21oz" — Outfit Light 13px, #525252. Pulled from
+    `product.metafields.custom.size_note`.
+
+  @example
+  {% content_for 'block', type: '_product-short-description', id: 'product-short-description', closest.product: closest.product %}
+{% enddoc %}
+
+{%- liquid
+  assign desc_product = closest.product
+  assign short_description = desc_product.metafields.custom.short_description
+  assign size_note = desc_product.metafields.custom.size_note
+
+  if short_description == blank
+    assign short_description = desc_product.description | strip_html | truncatewords: 30
+  endif
+-%}
+
+{%- if short_description != blank or size_note != blank -%}
+  <div class="product-short-description">
+    {%- if short_description != blank -%}
+      <p class="product-short-description__text">
+        {{- short_description -}}
+      </p>
+    {%- endif -%}
+
+    {%- if size_note != blank -%}
+      <p class="product-short-description__size">
+        {{- size_note -}}
+      </p>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-short-description {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .product-short-description__text {
+    margin: 0;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    /* Non-palette color from Figma short description spec */
+    color: #0A0A0A;
+  }
+
+  .product-short-description__size {
+    margin: 0;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    /* Non-palette color from Figma size note spec */
+    color: #525252;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product short description",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Short description: product.metafields.custom.short_description (fallback: first 30 words of description). Size note: product.metafields.custom.size_note."
+    }
+  ]
+}
+{% endschema %}

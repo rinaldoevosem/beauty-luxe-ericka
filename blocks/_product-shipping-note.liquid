@@ -1,0 +1,54 @@
+{% doc %}
+  Renders the "Shipping calculated at checkout." line under the price.
+
+  "Shipping" is a link to the store's shipping policy when one is configured.
+  Outfit Light 13px, #6C6C6C.
+
+  @example
+  {% content_for 'block', type: '_product-shipping-note', id: 'product-shipping-note' %}
+{% enddoc %}
+
+<p class="product-shipping-note">
+  {%- if shop.shipping_policy.url != blank -%}
+    <a
+      href="{{ shop.shipping_policy.url }}"
+      class="product-shipping-note__link"
+    >Shipping</a>
+  {%- else -%}
+    <span>Shipping</span>
+  {%- endif -%}
+  {{ ' ' }}calculated at checkout.
+</p>
+
+{% stylesheet %}
+  .product-shipping-note {
+    margin: 0;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    /* Non-palette color from Figma shipping note spec */
+    color: #6C6C6C;
+  }
+
+  .product-shipping-note__link {
+    /* Non-palette color from Figma shipping note spec */
+    color: #6C6C6C;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .product-shipping-note__link:hover,
+  .product-shipping-note__link:focus-visible {
+    color: var(--color-foreground);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product shipping note",
+  "tag": null,
+  "settings": []
+}
+{% endschema %}

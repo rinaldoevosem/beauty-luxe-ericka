@@ -173,7 +173,7 @@
     max-width: 738px;
   }
 
-  @media screen and (min-width: 750px) {
+  @media screen and (min-width: 1180px) {
     .product-information__media:has(.custom-gallery) {
       width: 738px;
       max-width: 738px;
@@ -190,6 +190,28 @@
       grid-template-columns: 1fr 738px !important;
     }
   }
+
+    /* Mid-range tablet/laptop band (751–1180px): the clamp rule above gives the
+     details column too little room and the gallery cramps. Force a 1:1 split
+     with a real CSS gap and cap the gallery at the spec's 738px so it stops
+     dominating, letting the details breathe.
+     RULE EXCEPTION: !important per explicit request — needed to override the
+     theme's `1fr min(50vw, sidebar)` rule and our own clamp() at the same
+     specificity from this narrower scope. */
+     @media screen and (min-width: 751px) and (max-width: 1180px) {
+    .product-information__grid:has(.custom-gallery).product-information--media-left {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 52px;
+    }
+
+    .product-information__media:has(.custom-gallery) {
+      width: 100%;
+      max-width: 738px;
+      min-width: 0;
+      flex-shrink: 0;
+    }
+  }
+
 
   /* ---------- Thumbnail strip ---------- */
   .custom-gallery__thumbs {
