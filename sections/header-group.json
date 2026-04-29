@@ -38,10 +38,17 @@
         "show_wishlist": true,
         "wishlist_url": ""
       }
+    },
+    "main_nav_section": {
+      "type": "main-nav",
+      "settings": {
+        "menu": "main-menu"
+      }
     }
   },
   "order": [
     "header_announcements_9jGBFp",
-    "header_section"
+    "header_section",
+    "main_nav_section"
   ]
 }

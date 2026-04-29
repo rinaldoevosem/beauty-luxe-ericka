@@ -39,9 +39,9 @@
     class="header-bar__menu-toggle"
     aria-label="Open menu"
   >
-    <svg class="header-bar__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden="true">
-      {% render 'icon', icon: 'menu' %}
-    </svg>
+    <span class="header-bar__icon" aria-hidden="true">
+      {{ 'icon-menu.svg' | inline_asset_content }}
+    </span>
   </button>
 
   <a href="{{ routes.root_url }}" class="header-bar__logo">{{ brand | escape }}</a>
@@ -55,9 +55,9 @@
     aria-label="Open search"
     aria-haspopup="dialog"
   >
-    <svg class="header-bar__search-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden="true">
-      {% render 'icon', icon: 'search' %}
-    </svg>
+    <span class="header-bar__search-icon" aria-hidden="true">
+      {{ 'icon-search.svg' | inline_asset_content }}
+    </span>
     <span class="header-bar__search-placeholder">{{ search_placeholder | escape }}</span>
   </button>
 {%- endif -%}
@@ -72,9 +72,9 @@
         aria-label="Open search"
         aria-haspopup="dialog"
       >
-        <svg class="header-bar__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden="true">
-          {% render 'icon', icon: 'search' %}
-        </svg>
+        <span class="header-bar__icon" aria-hidden="true">
+          {{ 'icon-search.svg' | inline_asset_content }}
+        </span>
       </button>
     </li>
   {%- endif -%}
@@ -82,9 +82,9 @@
   {%- if section.settings.show_account -%}
     <li class="header-bar__action">
       <a href="{{ routes.account_url }}" class="header-bar__action-link">
-        <svg class="header-bar__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden="true">
-          {{- 'icon-caret.svg' | inline_asset_content -}}
-        </svg>
+        <span class="header-bar__icon" aria-hidden="true">
+          {{ 'User-Icon.svg' | inline_asset_content }}
+        </span>
         <span class="header-bar__action-label">{{ account_label }}</span>
       </a>
     </li>
@@ -107,9 +107,9 @@
       class="header-bar__action-link"
       aria-label="Bag{% if cart.item_count > 0 %}, {{ cart.item_count }}{% endif %}"
     >
-      <svg class="header-bar__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden="true">
-        {% render 'icon', icon: 'cart' %}
-      </svg>
+      <span class="header-bar__icon" aria-hidden="true">
+        {{ 'Cart-Icon.svg' | inline_asset_content }}
+      </span>
       <span class="header-bar__action-label">Bag</span>
       {%- if cart.item_count > 0 -%}
         <span class="header-bar__action-count" aria-hidden="true">{{ cart.item_count }}</span>
@@ -122,7 +122,6 @@
   .header-bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     inline-size: 100%;
     gap: 24px;
     padding: 12px 30px;
@@ -131,6 +130,7 @@
   }
 
   .header-bar__brand-group {
+    flex: 2;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -180,15 +180,21 @@
     font-size: var(--type-p-sm-size);
     font-weight: var(--type-p-sm-weight-light);
     line-height: var(--type-p-sm-lh);
-    text-align: start;
   }
 
   .header-bar__search-icon {
-    inline-size: 14px;
-    block-size: 14px;
-    fill: currentColor;
-    stroke: currentColor;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 16px;
+    block-size: 16px;
     flex: 0 0 auto;
+    color: currentColor;
+  }
+
+  .header-bar__search-icon svg {
+    inline-size: 100%;
+    block-size: 100%;
   }
 
   .header-bar__search-placeholder {
@@ -196,8 +202,10 @@
   }
 
   .header-bar__actions {
+    flex: 1;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 20px;
     margin: 0;
     padding: 0;
@@ -226,11 +234,20 @@
   }
 
   .header-bar__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     inline-size: 16px;
     block-size: 16px;
+    flex: 0 0 auto;
+    color: currentColor;
     fill: currentColor;
     stroke: currentColor;
-    flex: 0 0 auto;
+  }
+
+  .header-bar__icon svg {
+    inline-size: 100%;
+    block-size: 100%;
   }
 
   .header-bar__action-count {
