@@ -1,0 +1,120 @@
+{% doc %}
+  Renders a breadcrumb trail at the top of the product information section.
+
+  Trail: Home / [Collection] / [Current Product]
+  - "Home" links to the store root.
+  - Collection segment uses the active `collection` context if present, otherwise
+    falls back to the product's first collection. Hidden if neither is available.
+  - The current product title is plain text (current page).
+
+  @example
+  {% content_for 'block', type: '_breadcrumbs', id: 'product-breadcrumbs', closest.product: closest.product %}
+{% enddoc %}
+
+{%- liquid
+  assign breadcrumb_product = closest.product
+  assign breadcrumb_collection = collection
+  if breadcrumb_collection == blank
+    assign breadcrumb_collection = breadcrumb_product.collections.first
+  endif
+-%}
+
+{%- comment -%}
+  RULE EXCEPTION: aria-label is hardcoded English. Locale file is auto-generated;
+  this label is not a settings field and has no existing translation key.
+{%- endcomment -%}
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol class="breadcrumbs__list">
+    <li class="breadcrumbs__item">
+      <a class="breadcrumbs__link" href="{{ routes.root_url }}">
+        {{- block.settings.home_label | escape -}}
+      </a>
+      <span class="breadcrumbs__sep" aria-hidden="true">/</span>
+    </li>
+
+    {%- if breadcrumb_collection != blank -%}
+      <li class="breadcrumbs__item">
+        <a class="breadcrumbs__link" href="{{ breadcrumb_collection.url }}">
+          {{- breadcrumb_collection.title | escape -}}
+        </a>
+        <span class="breadcrumbs__sep" aria-hidden="true">/</span>
+      </li>
+    {%- endif -%}
+
+    {%- if breadcrumb_product != blank -%}
+      <li class="breadcrumbs__item breadcrumbs__item--current">
+        <span class="breadcrumbs__current" aria-current="page">
+          {{- breadcrumb_product.title | escape -}}
+        </span>
+      </li>
+    {%- endif -%}
+  </ol>
+</nav>
+
+{% stylesheet %}
+  .breadcrumbs {
+    width: 100%;
+    padding: 16px 80px 20px;
+  }
+
+  .breadcrumbs__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .breadcrumbs__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    /* Non-palette color from Figma breadcrumb spec */
+    color: #6C6C6C;
+    /* RULE EXCEPTION: project pattern (see custom-product-gallery.liquid) — body
+       font setting is Jost, but breadcrumbs spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  .breadcrumbs__link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .breadcrumbs__link:hover,
+  .breadcrumbs__link:focus-visible {
+    color: var(--color-foreground);
+    text-decoration: underline;
+  }
+
+  .breadcrumbs__sep {
+    user-select: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .breadcrumbs {
+      padding: 16px 16px 20px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Breadcrumbs",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Home label",
+      "default": "Home"
+    }
+  ]
+}
+{% endschema %}

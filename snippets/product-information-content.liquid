@@ -96,7 +96,7 @@
         class="product-information__media"
         data-testid="product-information-media"
       >
-        {{ media_gallery }}
+        {% render 'custom-product-gallery', product: closest.product %}
       </div>
     {% endcapture %}
 

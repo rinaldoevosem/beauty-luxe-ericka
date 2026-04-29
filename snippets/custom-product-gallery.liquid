@@ -1,0 +1,469 @@
+{% doc %}
+  Custom Product Media Gallery (Figma spec — 738px left column).
+
+  Renders a thumbnail strip (80px wide, vertical stack) and a hero image (646×640)
+  with overlays: image counter, prev/next arrows, and an "Our Most-Loved" badge.
+  Mobile: collapses to a horizontally swipeable carousel.
+
+  @param {object} product - Required. The product to render media for.
+  @param {boolean} [show_most_loved] - Optional. Show the "Our Most-Loved Product" badge. Default: true.
+
+  @example
+  {% render 'custom-product-gallery', product: closest.product %}
+{% enddoc %}
+
+{%- liquid
+  assign media_items = product.media
+  assign media_count = media_items.size
+  if show_most_loved == nil
+    assign show_most_loved = true
+  endif
+-%}
+
+{%- if media_count > 0 -%}
+  <custom-product-gallery
+    class="custom-gallery"
+    data-current-index="0"
+    data-media-count="{{ media_count }}"
+  >
+    <div class="custom-gallery__thumbs" ref="thumbsList">
+      {%- for media in media_items -%}
+        <button
+          type="button"
+          class="custom-gallery__thumb {% if forloop.first %}is-active{% endif %}"
+          ref="thumbs[]"
+          data-index="{{ forloop.index0 }}"
+          on:click="/handleThumbClick/{{ forloop.index0 }}"
+          aria-label="{{ 'accessibility.scroll_to' | t: title: media.alt | default: media.media_type }}"
+          {% if forloop.first %}aria-current="true"{% endif %}
+        >
+          <span class="custom-gallery__thumb-inner">
+            {{
+              media.preview_image
+              | image_url: width: 200
+              | image_tag:
+                loading: 'lazy',
+                width: 76,
+                height: 76,
+                widths: '76, 152, 200',
+                sizes: '76px',
+                class: 'custom-gallery__thumb-image',
+                alt: media.alt
+            }}
+            {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+              <span class="custom-gallery__thumb-play" aria-hidden="true">
+                {{ 'icon-play.svg' | inline_asset_content }}
+              </span>
+            {%- endif -%}
+          </span>
+        </button>
+      {%- endfor -%}
+    </div>
+
+    <div class="custom-gallery__hero">
+      <div class="custom-gallery__slides" ref="slidesList">
+        {%- for media in media_items -%}
+          <div
+            class="custom-gallery__slide {% if forloop.first %}is-active{% endif %}"
+            ref="slides[]"
+            data-index="{{ forloop.index0 }}"
+            data-media-type="{{ media.media_type }}"
+            {% unless forloop.first %}aria-hidden="true"{% endunless %}
+          >
+            {%- if media.media_type == 'image' -%}
+              {{
+                media
+                | image_url: width: 1400
+                | image_tag:
+                  loading: forloop.first | default: false,
+                  width: 646,
+                  height: 640,
+                  widths: '400, 646, 800, 1024, 1292',
+                  sizes: '(max-width: 749px) 100vw, 646px',
+                  class: 'custom-gallery__image',
+                  alt: media.alt
+              }}
+            {%- elsif media.media_type == 'video' or media.media_type == 'external_video' -%}
+              <div class="custom-gallery__video">
+                {{
+                  media.preview_image
+                  | image_url: width: 1400
+                  | image_tag:
+                    loading: 'lazy',
+                    width: 646,
+                    height: 640,
+                    widths: '400, 646, 800, 1024, 1292',
+                    sizes: '(max-width: 749px) 100vw, 646px',
+                    class: 'custom-gallery__image',
+                    alt: media.alt
+                }}
+                <span class="custom-gallery__video-play" aria-hidden="true">
+                  {{ 'icon-play.svg' | inline_asset_content }}
+                </span>
+              </div>
+            {%- else -%}
+              {{
+                media.preview_image
+                | image_url: width: 1400
+                | image_tag:
+                  loading: 'lazy',
+                  width: 646,
+                  height: 640,
+                  widths: '400, 646, 800, 1024, 1292',
+                  sizes: '(max-width: 749px) 100vw, 646px',
+                  class: 'custom-gallery__image',
+                  alt: media.alt
+              }}
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if show_most_loved -%}
+        <div class="custom-gallery__most-loved" aria-hidden="true">
+          <span class="custom-gallery__most-loved-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5.33333 6.66667V13.3333H11.3333C11.6 13.3333 11.8267 13.18 11.9267 12.9533L13.96 8.21333C14.0067 8.10667 14.0333 7.99333 14.0333 7.87333V6.66667C14.0333 6.3 13.7333 6 13.3667 6H9.21333L9.84667 2.94C9.86 2.87333 9.86667 2.8 9.86667 2.72667C9.86667 2.45333 9.75333 2.2 9.57333 2.02L8.86667 1.33333L4.47333 5.72667C4.23333 5.96667 4.08667 6.3 4.08667 6.66667H5.33333ZM2 6.66667H4V13.3333H2V6.66667Z" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="custom-gallery__most-loved-text">{{ 'products.product.most_loved' | t: default: 'Our Most-Loved Product' }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if media_count > 1 -%}
+        <button
+          type="button"
+          class="custom-gallery__arrow custom-gallery__arrow--prev"
+          ref="prevButton"
+          on:click="/handlePrev"
+          aria-label="{{ 'accessibility.previous' | t: default: 'Previous' }}"
+        >
+          <span class="custom-gallery__arrow-icon" aria-hidden="true">
+            {{ 'icon-chevron-left.svg' | inline_asset_content }}
+          </span>
+        </button>
+        <button
+          type="button"
+          class="custom-gallery__arrow custom-gallery__arrow--next"
+          ref="nextButton"
+          on:click="/handleNext"
+          aria-label="{{ 'accessibility.next' | t: default: 'Next' }}"
+        >
+          <span class="custom-gallery__arrow-icon" aria-hidden="true">
+            {{ 'icon-chevron-right.svg' | inline_asset_content }}
+          </span>
+        </button>
+
+        <div class="custom-gallery__counter" aria-hidden="true">
+          <span ref="counterCurrent">1</span> / <span>{{ media_count }}</span>
+        </div>
+      {%- endif -%}
+    </div>
+  </custom-product-gallery>
+
+  <script src="{{ 'custom-product-gallery.js' | asset_url }}" type="module"></script>
+{%- endif -%}
+
+{% stylesheet %}
+  .custom-gallery {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+    max-width: 738px;
+  }
+
+  /* ---------- Thumbnail strip ---------- */
+  .custom-gallery__thumbs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  .custom-gallery__thumb {
+    width: 80px;
+    height: 80px;
+    padding: 2px;
+    background: transparent;
+    border: 2px solid #E7E7E7;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .custom-gallery__thumb:hover {
+    border-color: #0A0A0A;
+  }
+
+  .custom-gallery__thumb.is-active {
+    border-color: #0A0A0A;
+  }
+
+  .custom-gallery__thumb-inner {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .custom-gallery__thumb-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .custom-gallery__thumb-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    transform: translate(-50%, -50%);
+    color: #FFFFFF;
+    pointer-events: none;
+  }
+
+  .custom-gallery__thumb-play svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ---------- Hero image ---------- */
+  .custom-gallery__hero {
+    position: relative;
+    width: 646px;
+    height: 640px;
+    max-width: 100%;
+    background: #FAFAFA;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 1;
+  }
+
+  .custom-gallery__slides {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .custom-gallery__slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease;
+  }
+
+  .custom-gallery__slide.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .custom-gallery__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .custom-gallery__video {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .custom-gallery__video-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    color: #0A0A0A;
+    border-radius: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .custom-gallery__video-play svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* ---------- Counter badge ---------- */
+  .custom-gallery__counter {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    padding: 4px 12px;
+    background: #6C6C6C;
+    color: #FFFFFF;
+    font-family: 'AktivGrotesk-Regular', var(--font-body--family);
+    font-size: 14px;
+    line-height: 1.2;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    pointer-events: none;
+  }
+
+  /* ---------- Navigation arrows ---------- */
+  .custom-gallery__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 500px;
+    background: #FFFFFF;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0px 10px 15px rgba(0, 0, 0, 0.1),
+      0px 4px 6px rgba(0, 0, 0, 0.1);
+    color: #0A0A0A;
+    transition: transform 0.2s ease;
+  }
+
+  .custom-gallery__arrow:hover {
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  .custom-gallery__arrow--prev {
+    left: 16px;
+  }
+
+  .custom-gallery__arrow--next {
+    right: 16px;
+  }
+
+  .custom-gallery__arrow-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+  }
+
+  .custom-gallery__arrow-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* ---------- "Our Most-Loved" badge ---------- */
+  .custom-gallery__most-loved {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: #FEDC5C;
+    border: 1px solid #E7E7E7;
+    border-radius: 50px;
+    pointer-events: none;
+  }
+
+  .custom-gallery__most-loved-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    color: #0A0A0A;
+  }
+
+  .custom-gallery__most-loved-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .custom-gallery__most-loved-text {
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.2;
+    color: #0A0A0A;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------- Mobile (< 750px): horizontal swipe carousel ---------- */
+  @media screen and (max-width: 749px) {
+    .custom-gallery {
+      flex-direction: column;
+      gap: 8px;
+      max-width: 100%;
+    }
+
+    .custom-gallery__thumbs {
+      display: none;
+    }
+
+    .custom-gallery__hero {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+      border-radius: 10px;
+    }
+
+    .custom-gallery__slides {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .custom-gallery__slides::-webkit-scrollbar {
+      display: none;
+    }
+
+    .custom-gallery__slide {
+      position: relative;
+      inset: auto;
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      opacity: 1;
+      visibility: visible;
+      scroll-snap-align: start;
+    }
+
+    .custom-gallery__arrow {
+      display: none;
+    }
+
+    .custom-gallery__most-loved {
+      top: 12px;
+      right: 12px;
+      padding: 3px 10px;
+    }
+
+    .custom-gallery__most-loved-text {
+      font-size: 11px;
+    }
+
+    .custom-gallery__counter {
+      right: 12px;
+      bottom: 12px;
+      padding: 4px 12px;
+    }
+  }
+{% endstylesheet %}

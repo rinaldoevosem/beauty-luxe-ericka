@@ -4,6 +4,12 @@
   {{ closest.product | structured_data }}
 </script>
 
+{% content_for 'block',
+  type: '_breadcrumbs',
+  id: 'product-breadcrumbs',
+  closest.product: closest.product
+%}
+
 {% capture media_gallery %}
   {%- content_for 'block',
     type: '_product-media-gallery',
