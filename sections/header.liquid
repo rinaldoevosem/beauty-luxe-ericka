@@ -83,7 +83,7 @@
     <li class="header-bar__action">
       <a href="{{ routes.account_url }}" class="header-bar__action-link">
         <svg class="header-bar__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden="true">
-          {% render 'icon', icon: 'account' %}
+          {{- 'icon-caret.svg' | inline_asset_content -}}
         </svg>
         <span class="header-bar__action-label">{{ account_label }}</span>
       </a>
