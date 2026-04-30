@@ -1,8 +1,7 @@
 {% doc %}
   Renders the product header column for the Product Info Panel.
 
-  Contains the brand row at the top, followed by the feature tags, price info,
-  shipping note, subscribe badge, and short description as nested static blocks.
+  Contains the brand row at the top, a slot for merchant-added dynamic blocks
 
   Layout (top → bottom):
   - Brand row: brand name (`closest.product.vendor`) + share/favorite icons.
@@ -54,6 +53,8 @@
       </button>
     </div>
   </div>
+
+  {% content_for 'blocks' %}
 
   {% content_for 'block',
     type: '_product-feature-tags',
@@ -159,6 +160,19 @@
 {
   "name": "Product header",
   "tag": null,
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" },
+    { "type": "text" },
+    { "type": "price" },
+    { "type": "icon" },
+    { "type": "image" },
+    { "type": "group" },
+    { "type": "spacer" },
+    { "type": "review" },
+    { "type": "product-inventory" },
+    { "type": "product-custom-property" }
+  ],
   "settings": []
 }
 {% endschema %}
