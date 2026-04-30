@@ -1,11 +1,16 @@
 {% doc %}
-  Renders the product header row at the top of the Product Info Panel.
+  Renders the product header column for the Product Info Panel.
 
-  Layout: flex row, space-between.
-  - Left: brand name (from `closest.product.vendor`).
-  - Right: share + favorite icon buttons (20x20, gap 8px).
+  Contains the brand row at the top, followed by the feature tags, price info,
+  shipping note, subscribe badge, and short description as nested static blocks.
 
-  Buttons are visual only — wire up share/wishlist behavior separately.
+  Layout (top → bottom):
+  - Brand row: brand name (`closest.product.vendor`) + share/favorite icons.
+  - Product feature tags
+  - Product price info (price + installment line)
+  - Product shipping note
+  - Product subscribe badge
+  - Product short description
 
   @example
   {% content_for 'block', type: '_product-header', id: 'product-header', closest.product: closest.product %}
@@ -21,36 +26,69 @@
   are no existing translation keys for "Share product" / "Save to favorites".
 {% endcomment %}
 <div class="product-header">
-  <p class="product-header__brand">
-    {{- brand_name | escape -}}
-  </p>
+  <div class="product-header__row">
+    <p class="product-header__brand">
+      {{- brand_name | escape -}}
+    </p>
 
-  <div class="product-header__actions">
-    <button
-      type="button"
-      class="product-header__action"
-      aria-label="Share product"
-    >
-      <span class="svg-wrapper product-header__icon">
-        {{- 'icon-share.svg' | inline_asset_content -}}
-      </span>
-    </button>
+    <div class="product-header__actions">
+      <button
+        type="button"
+        class="product-header__action"
+        aria-label="Share product"
+      >
+        <span class="svg-wrapper product-header__icon">
+          {{- 'icon-share.svg' | inline_asset_content -}}
+        </span>
+      </button>
 
-    <button
-      type="button"
-      class="product-header__action"
-      aria-label="Save to favorites"
-      aria-pressed="false"
-    >
-      <span class="svg-wrapper product-header__icon">
-        {{- 'icon-heart.svg' | inline_asset_content -}}
-      </span>
-    </button>
+      <button
+        type="button"
+        class="product-header__action"
+        aria-label="Save to favorites"
+        aria-pressed="false"
+      >
+        <span class="svg-wrapper product-header__icon">
+          {{- 'icon-heart.svg' | inline_asset_content -}}
+        </span>
+      </button>
+    </div>
   </div>
+
+  {% content_for 'block',
+    type: '_product-feature-tags',
+    id: 'product-feature-tags',
+    closest.product: closest.product
+  %}
+  {% content_for 'block',
+    type: '_product-price-info',
+    id: 'product-price-info',
+    closest.product: closest.product
+  %}
+  {% content_for 'block',
+    type: '_product-shipping-note',
+    id: 'product-shipping-note'
+  %}
+  {% content_for 'block',
+    type: '_product-subscribe-badge',
+    id: 'product-subscribe-badge'
+  %}
+  {% content_for 'block',
+    type: '_product-short-description',
+    id: 'product-short-description',
+    closest.product: closest.product
+  %}
 </div>
 
 {% stylesheet %}
   .product-header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .product-header__row {
     display: flex;
     align-items: center;
     justify-content: space-between;

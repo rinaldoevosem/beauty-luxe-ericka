@@ -172,7 +172,15 @@
     width: 100%;
     max-width: 738px;
   }
-
+  @media screen and (max-width: 1180px) {
+    .custom-gallery {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+    max-width: 88%;
+  } 
+  }
   @media screen and (min-width: 1180px) {
     .product-information__media:has(.custom-gallery) {
       width: 738px;
