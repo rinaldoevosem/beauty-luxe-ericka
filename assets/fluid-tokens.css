@@ -26,4 +26,8 @@
   --fluid-24-40: clamp(24px, calc(40 / var(--fluid-base) * 100vw), calc(40 / var(--fluid-base) * var(--fluid-cap) * 1px));
   --fluid-32-80: clamp(32px, calc(80 / var(--fluid-base) * 100vw), calc(80 / var(--fluid-base) * var(--fluid-cap) * 1px));
   --fluid-40-48: clamp(40px, calc(48 / var(--fluid-base) * 100vw), calc(48 / var(--fluid-base) * var(--fluid-cap) * 1px));
+
+  /* Footer Localization Bar */
+  --fluid-24-48: clamp(24px, calc(48 / var(--fluid-base) * 100vw), calc(48 / var(--fluid-base) * var(--fluid-cap) * 1px));
+  --fluid-24-60: clamp(24px, calc(60 / var(--fluid-base) * 100vw), calc(60 / var(--fluid-base) * var(--fluid-cap) * 1px));
 }

@@ -26,6 +26,14 @@
   %}
 {% endcapture %}
 
+{% capture info_accordion %}
+  {%- content_for 'block',
+    type: 'product-info-accordion',
+    id: 'product-info-accordion',
+    closest.product: closest.product
+  -%}
+{% endcapture %}
+
 {% capture additional_blocks %}
   {% content_for 'blocks' %}
 {% endcapture %}
@@ -179,7 +187,8 @@
   settings: section.settings,
   media_gallery: media_gallery,
   product_details: product_details,
-  additional_blocks: additional_blocks
+  additional_blocks: additional_blocks,
+  info_accordion: info_accordion
 %}
 
 {% stylesheet %}

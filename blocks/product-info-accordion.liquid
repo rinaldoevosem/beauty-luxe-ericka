@@ -1,0 +1,403 @@
+{% doc %}
+  Renders the Product Information accordion under the gallery (left column).
+
+  Sections, top → bottom:
+  - "About the Product" (open by default): rich-text body + 7-row specifications table
+  - "Ingredients"
+  - "How to Use"
+  - "Shipping & Returns"
+
+  Content sources (preferred → fallback):
+  - About body:        product.metafields.custom.about       → product.description
+  - Specifications:    product.metafields.custom.specifications  (JSON array of {label, value})
+  - Ingredients:       product.metafields.custom.ingredients  → block.settings.ingredients_text
+  - How to Use:        product.metafields.custom.how_to_use   → block.settings.how_to_use_text
+  - Shipping & Returns: product.metafields.custom.shipping_returns → block.settings.shipping_text → shop.shipping_policy.body
+
+  Uses native <details>/<summary> per Horizon's preference for native HTML over custom JS components.
+
+  @example
+  {% content_for 'block',
+     type: 'product-info-accordion',
+     id: 'product-info-accordion',
+     closest.product: closest.product %}
+{% enddoc %}
+
+{%- liquid
+  assign target_product = closest.product
+
+  assign about_content = target_product.metafields.custom.about
+  if about_content == blank
+    assign about_content = target_product.description
+  endif
+
+  assign specs = target_product.metafields.custom.specifications.value
+
+  assign ingredients = target_product.metafields.custom.ingredients
+  if ingredients == blank
+    assign ingredients = block.settings.ingredients_text
+  endif
+
+  assign how_to_use = target_product.metafields.custom.how_to_use
+  if how_to_use == blank
+    assign how_to_use = block.settings.how_to_use_text
+  endif
+
+  assign shipping_content = target_product.metafields.custom.shipping_returns
+  if shipping_content == blank
+    assign shipping_content = block.settings.shipping_text
+  endif
+  if shipping_content == blank
+    assign shipping_content = shop.shipping_policy.body
+  endif
+-%}
+
+<div
+  class="product-info-accordion"
+  {{ block.shopify_attributes }}
+>
+  {%- if about_content != blank or specs != blank -%}
+    <details
+      class="product-info-accordion__item"
+      open
+    >
+      <summary class="product-info-accordion__summary">
+        <span class="product-info-accordion__heading">{{ block.settings.about_title | escape }}</span>
+        <span
+          class="product-info-accordion__icon"
+          aria-hidden="true"
+        >
+          <span class="svg-wrapper product-info-accordion__icon-glyph product-info-accordion__icon-glyph--minus">
+            {{- 'icon-minus.svg' | inline_asset_content -}}
+          </span>
+          <span class="svg-wrapper product-info-accordion__icon-glyph product-info-accordion__icon-glyph--plus">
+            {{- 'icon-plus.svg' | inline_asset_content -}}
+          </span>
+        </span>
+      </summary>
+      <div class="product-info-accordion__content">
+        {%- if about_content != blank -%}
+          <div class="product-info-accordion__rich-text rte">
+            {{ about_content }}
+          </div>
+        {%- endif -%}
+
+        {%- if specs != blank -%}
+          <table class="product-info-accordion__specs">
+            <tbody>
+              {%- for spec in specs -%}
+                <tr class="product-info-accordion__specs-row product-info-accordion__specs-row--{% cycle 'odd', 'even' %}">
+                  <th
+                    scope="row"
+                    class="product-info-accordion__specs-label"
+                  >
+                    {{- spec.label | escape -}}
+                  </th>
+                  <td class="product-info-accordion__specs-value">
+                    {{- spec.value | escape -}}
+                  </td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        {%- endif -%}
+      </div>
+    </details>
+  {%- endif -%}
+
+  {%- if ingredients != blank -%}
+    <details class="product-info-accordion__item">
+      <summary class="product-info-accordion__summary">
+        <span class="product-info-accordion__heading">{{ block.settings.ingredients_title | escape }}</span>
+        <span
+          class="product-info-accordion__icon"
+          aria-hidden="true"
+        >
+          <span class="svg-wrapper product-info-accordion__icon-glyph product-info-accordion__icon-glyph--minus">
+            {{- 'icon-minus.svg' | inline_asset_content -}}
+          </span>
+          <span class="svg-wrapper product-info-accordion__icon-glyph product-info-accordion__icon-glyph--plus">
+            {{- 'icon-plus.svg' | inline_asset_content -}}
+          </span>
+        </span>
+      </summary>
+      <div class="product-info-accordion__content">
+        <div class="product-info-accordion__rich-text rte">
+          {{ ingredients }}
+        </div>
+      </div>
+    </details>
+  {%- endif -%}
+
+  {%- if how_to_use != blank -%}
+    <details class="product-info-accordion__item">
+      <summary class="product-info-accordion__summary">
+        <span class="product-info-accordion__heading">{{ block.settings.how_to_use_title | escape }}</span>
+        <span
+          class="product-info-accordion__icon"
+          aria-hidden="true"
+        >
+          <span class="svg-wrapper product-info-accordion__icon-glyph product-info-accordion__icon-glyph--minus">
+            {{- 'icon-minus.svg' | inline_asset_content -}}
+          </span>
+          <span class="svg-wrapper product-info-accordion__icon-glyph product-info-accordion__icon-glyph--plus">
+            {{- 'icon-plus.svg' | inline_asset_content -}}
+          </span>
+        </span>
+      </summary>
+      <div class="product-info-accordion__content">
+        <div class="product-info-accordion__rich-text rte">
+          {{ how_to_use }}
+        </div>
+      </div>
+    </details>
+  {%- endif -%}
+
+  {%- if shipping_content != blank -%}
+    <details class="product-info-accordion__item">
+      <summary class="product-info-accordion__summary">
+        <span class="product-info-accordion__heading">{{ block.settings.shipping_title | escape }}</span>
+        <span
+          class="product-info-accordion__icon"
+          aria-hidden="true"
+        >
+          <span class="svg-wrapper product-info-accordion__icon-glyph product-info-accordion__icon-glyph--minus">
+            {{- 'icon-minus.svg' | inline_asset_content -}}
+          </span>
+          <span class="svg-wrapper product-info-accordion__icon-glyph product-info-accordion__icon-glyph--plus">
+            {{- 'icon-plus.svg' | inline_asset_content -}}
+          </span>
+        </span>
+      </summary>
+      <div class="product-info-accordion__content">
+        <div class="product-info-accordion__rich-text rte">
+          {{ shipping_content }}
+        </div>
+      </div>
+    </details>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .product-info-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* 16px */
+    width: 100%;
+    margin-block-start: 1.5rem;
+  }
+
+  .product-info-accordion__item {
+    width: 100%;
+  }
+
+  .product-info-accordion__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block-end: 1rem; /* 16px */
+    /* Non-palette color from Figma — accordion divider */
+    border-bottom: 1px solid #E7E7E7;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+  }
+
+  .product-info-accordion__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .product-info-accordion__summary:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  .product-info-accordion__heading {
+    font-family: var(--font-body--family); /* Jost */
+    font-weight: 400;
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.4;
+    /* Non-palette color from Figma — accordion heading */
+    color: #0A0A0A;
+    margin: 0;
+  }
+
+  .product-info-accordion__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    /* Non-palette color from Figma — accordion icon */
+    color: #0A0A0A;
+  }
+
+  .product-info-accordion__icon-glyph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+  }
+
+  .product-info-accordion__icon-glyph svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .product-info-accordion__icon-glyph--minus {
+    display: none;
+  }
+
+  .product-info-accordion__item[open] > .product-info-accordion__summary .product-info-accordion__icon-glyph--minus {
+    display: inline-flex;
+  }
+
+  .product-info-accordion__item[open] > .product-info-accordion__summary .product-info-accordion__icon-glyph--plus {
+    display: none;
+  }
+
+  .product-info-accordion__content {
+    padding-block-start: 1rem; /* 16px */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .product-info-accordion__rich-text {
+    margin: 0;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.5;
+    /* Non-palette color from Figma — accordion body */
+    color: #525252;
+  }
+
+  .product-info-accordion__rich-text > * {
+    margin: 0;
+  }
+
+  .product-info-accordion__rich-text > * + * {
+    margin-block-start: 0.75rem;
+  }
+
+  .product-info-accordion__specs {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+  }
+
+  .product-info-accordion__specs-row--odd {
+    /* Non-palette color from Figma — specs alternating row */
+    background-color: #F6F6F8;
+    border-bottom: 1px solid #E7E7E7;
+  }
+
+  .product-info-accordion__specs-row--even {
+    background-color: transparent;
+  }
+
+  .product-info-accordion__specs-label,
+  .product-info-accordion__specs-value {
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 400;
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.5;
+    padding: 12px 16px;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .product-info-accordion__specs-label {
+    /* Non-palette color from Figma — specs label */
+    color: #0A0A0A;
+    font-weight: 500;
+    width: 40%;
+  }
+
+  .product-info-accordion__specs-value {
+    /* Non-palette color from Figma — specs value */
+    color: #525252;
+    font-weight: 300;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product info accordion",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "About the Product"
+    },
+    {
+      "type": "text",
+      "id": "about_title",
+      "label": "Section title",
+      "default": "About the Product"
+    },
+    {
+      "type": "paragraph",
+      "content": "Pulls from product.metafields.custom.about, falls back to the product description."
+    },
+    {
+      "type": "paragraph",
+      "content": "Specs table pulls from product.metafields.custom.specifications (JSON: array of objects with `label` and `value` keys)."
+    },
+    {
+      "type": "header",
+      "content": "Ingredients"
+    },
+    {
+      "type": "text",
+      "id": "ingredients_title",
+      "label": "Section title",
+      "default": "Ingredients"
+    },
+    {
+      "type": "richtext",
+      "id": "ingredients_text",
+      "label": "Fallback content",
+      "info": "Used when product.metafields.custom.ingredients is empty."
+    },
+    {
+      "type": "header",
+      "content": "How to Use"
+    },
+    {
+      "type": "text",
+      "id": "how_to_use_title",
+      "label": "Section title",
+      "default": "How to Use"
+    },
+    {
+      "type": "richtext",
+      "id": "how_to_use_text",
+      "label": "Fallback content",
+      "info": "Used when product.metafields.custom.how_to_use is empty."
+    },
+    {
+      "type": "header",
+      "content": "Shipping & Returns"
+    },
+    {
+      "type": "text",
+      "id": "shipping_title",
+      "label": "Section title",
+      "default": "Shipping & Returns"
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_text",
+      "label": "Fallback content",
+      "info": "Used when no metafield is set. Falls back to the store's shipping policy if both are empty."
+    }
+  ]
+}
+{% endschema %}

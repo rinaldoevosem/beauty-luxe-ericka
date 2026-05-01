@@ -1,0 +1,407 @@
+{% doc %}
+  Footer Localization Bar (bottom tier of the footer).
+
+  Layout (desktop):
+  - Left: country/currency selector + 6 payment method icons (stacked, 16px gap).
+  - Right: 4 social media icons (48×48 circles, #3D3D3D border).
+
+  Country selector pulls from `localization.country`. Payment icons render from
+  `shop.enabled_payment_types` (configure under Settings → Payments). Social
+  URLs are configured per-block in this section.
+
+  Figma: Beauty Luxe / Footer / Localization Bar (37:1071)
+{% enddoc %}
+
+{%- liquid
+  assign country = localization.country
+  assign currency = country.currency
+  assign flag_image = section.settings.flag_image
+  assign show_country = section.settings.show_country_selector
+  assign show_payments = section.settings.show_payment_icons
+  assign social_links = 'facebook_url,instagram_url,twitter_url,tiktok_url' | split: ','
+-%}
+
+<div class="footer-localization-bar" data-section-id="{{ section.id }}">
+  <div class="footer-localization-bar__inner">
+    {%- if show_country or show_payments -%}
+      <div class="footer-localization-bar__group footer-localization-bar__group--start">
+        {%- if show_country and localization.available_countries.size > 1 -%}
+          {%- form 'localization', class: 'footer-loc-form' -%}
+            <label class="visually-hidden" for="footer-country-select-{{ section.id }}">
+              {{ 'localization.country_label' | t | default: 'Country/region' }}
+            </label>
+            <div class="footer-loc-button">
+              <span class="footer-loc-button__flag" aria-hidden="true">
+                {%- if flag_image != blank -%}
+                  {{ flag_image | image_url: width: 40 | image_tag:
+                    alt: '',
+                    width: 20,
+                    height: 20,
+                    loading: 'lazy',
+                    class: 'footer-loc-button__flag-img'
+                  }}
+                {%- else -%}
+                  {{- 'flag-us.svg' | inline_asset_content -}}
+                {%- endif -%}
+              </span>
+              <span class="footer-loc-button__text">
+                {{- country.name }} ({{ currency.iso_code }} {{ currency.symbol -}})
+              </span>
+              <span class="svg-wrapper footer-loc-button__chevron" aria-hidden="true">
+                {{- 'icon-chevron-down.svg' | inline_asset_content -}}
+              </span>
+              <select
+                id="footer-country-select-{{ section.id }}"
+                class="footer-loc-button__select"
+                name="country_code"
+                aria-label="{{ 'localization.country_label' | t | default: 'Country/region' }}"
+                onchange="this.form.submit()"
+              >
+                {%- for c in localization.available_countries -%}
+                  <option
+                    value="{{ c.iso_code }}"
+                    {% if c.iso_code == country.iso_code %}selected{% endif %}
+                  >
+                    {{- c.name }} ({{ c.currency.iso_code }} {{ c.currency.symbol -}})
+                  </option>
+                {%- endfor -%}
+              </select>
+            </div>
+          {%- endform -%}
+        {%- elsif show_country -%}
+          <div class="footer-loc-button">
+            <span class="footer-loc-button__flag" aria-hidden="true">
+              {%- if flag_image != blank -%}
+                {{ flag_image | image_url: width: 40 | image_tag:
+                  alt: '',
+                  width: 20,
+                  height: 20,
+                  loading: 'lazy',
+                  class: 'footer-loc-button__flag-img'
+                }}
+              {%- else -%}
+                {{- 'flag-us.svg' | inline_asset_content -}}
+              {%- endif -%}
+            </span>
+            <span class="footer-loc-button__text">
+              {{- country.name }} ({{ currency.iso_code }} {{ currency.symbol -}})
+            </span>
+          </div>
+        {%- endif -%}
+
+        {%- if show_payments and shop.enabled_payment_types.size > 0 -%}
+          <ul class="footer-payment-icons" role="list" aria-label="Accepted payment methods">
+            {%- for type in shop.enabled_payment_types -%}
+              <li class="footer-payment-icons__item">
+                {{ type | payment_type_svg_tag: class: 'footer-payment-icons__svg' }}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <ul class="footer-social-circles" role="list" aria-label="Social media">
+      {%- for link_key in social_links -%}
+        {%- assign url = section.settings[link_key] -%}
+        {%- if url != blank -%}
+          {%- liquid
+            case link_key
+              when 'facebook_url'
+                assign platform = 'facebook'
+              when 'instagram_url'
+                assign platform = 'instagram'
+              when 'twitter_url'
+                assign platform = 'x'
+              when 'tiktok_url'
+                assign platform = 'tiktok'
+            endcase
+          -%}
+          <li class="footer-social-circles__item">
+            <a
+              href="{{ url }}"
+              class="footer-social-circles__link"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="{{ platform | capitalize }}"
+            >
+              <svg
+                class="footer-social-circles__icon"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                {%- render 'icon', icon: platform -%}
+              </svg>
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% stylesheet %}
+  .footer-localization-bar {
+    width: 100%;
+    background-color: var(--color-footer-dark);
+  }
+
+  .footer-localization-bar__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--fluid-24-40);
+    padding-block: var(--fluid-25-32);
+    padding-inline: var(--fluid-16-80);
+  }
+
+  .footer-localization-bar__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fluid-16-16);
+  }
+
+  /* Country/currency button — wraps a transparent native <select> for full keyboard
+     and mobile native picker support; the visible chrome (flag + text + chevron)
+     sits behind it. */
+  .footer-loc-form {
+    margin: 0;
+  }
+
+  .footer-loc-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding-block: 2px;
+    border-radius: 100px;
+    color: #FFFFFF;
+    cursor: pointer;
+  }
+
+  .footer-loc-button:hover .footer-loc-button__chevron,
+  .footer-loc-button:focus-within .footer-loc-button__chevron {
+    transform: rotate(180deg);
+  }
+
+  .footer-loc-button__select {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: transparent;
+    font-size: 16px; /* Prevents iOS zoom on focus */
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    opacity: 0;
+  }
+
+  .footer-loc-button__select:focus-visible {
+    opacity: 0;
+    outline: none;
+  }
+
+  .footer-loc-button:has(.footer-loc-button__select:focus-visible) {
+    outline: 2px solid var(--color-footer-text-muted);
+    outline-offset: 4px;
+  }
+
+  /* Native dropdown options inherit OS styling — force readable colors. */
+  .footer-loc-button__select option {
+    background-color: var(--color-footer-dark);
+    color: #FFFFFF;
+  }
+
+  .footer-loc-button__flag {
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.3);
+  }
+
+  .footer-loc-button__flag svg,
+  .footer-loc-button__flag-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .footer-loc-button__text {
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Regular. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 400;
+    font-size: var(--fluid-14-14);
+    line-height: 1.5;
+    color: #FFFFFF;
+    white-space: nowrap;
+  }
+
+  .footer-loc-button__chevron {
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    color: #FFFFFF;
+    transition: transform 0.2s ease;
+  }
+
+  /* Payment icons row */
+  .footer-payment-icons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer-payment-icons__item {
+    display: inline-flex;
+    align-items: center;
+    width: 38px;
+    height: 24px;
+  }
+
+  .footer-payment-icons__svg,
+  .footer-payment-icons__item svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Social media circles */
+  .footer-social-circles {
+    display: flex;
+    align-items: center;
+    gap: var(--fluid-24-60);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer-social-circles__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--color-footer-border);
+    border-radius: 24px;
+    color: #FFFFFF;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .footer-social-circles__link:hover,
+  .footer-social-circles__link:focus-visible {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--color-footer-text-muted);
+  }
+
+  .footer-social-circles__icon {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
+
+  @media screen and (max-width: 749px) {
+    .footer-localization-bar__inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .footer-localization-bar__group--start,
+    .footer-social-circles {
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Footer localization bar",
+  "tag": "section",
+  "class": "section--full-width",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Country & currency"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country_selector",
+      "label": "Show country/currency selector",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "flag_image",
+      "label": "Flag image (optional)",
+      "info": "Override the default US flag. Will be displayed as a 20×20 circle."
+    },
+    {
+      "type": "header",
+      "content": "Payment methods"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show accepted payment icons",
+      "info": "Pulls from Settings → Payments. Order follows store config.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Social media"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "twitter_url",
+      "label": "X (Twitter) URL"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer localization bar",
+      "settings": {
+        "show_country_selector": true,
+        "show_payment_icons": true,
+        "facebook_url": "https://www.facebook.com/",
+        "instagram_url": "https://www.instagram.com/",
+        "twitter_url": "https://x.com/",
+        "tiktok_url": "https://www.tiktok.com/"
+      }
+    }
+  ]
+}
+{% endschema %}
