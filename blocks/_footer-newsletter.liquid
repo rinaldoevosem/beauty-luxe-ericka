@@ -28,7 +28,7 @@
   {%- endif -%}
 
   {%- if subtitle != blank -%}
-    <p class="footer-newsletter__subtitle">{{ subtitle }}</p>
+    <div class="footer-newsletter__subtitle">{{ subtitle | strip_html | newline_to_br }}</div>
   {%- endif -%}
 
   {%- form 'customer', class: 'footer-newsletter__form' -%}
@@ -82,7 +82,8 @@
     color: #FFFFFF;
   }
 
-  .footer-newsletter__subtitle {
+  .footer-newsletter__subtitle,
+  .footer-newsletter__subtitle p {
     margin: 0;
     /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
     font-family: 'Outfit', var(--font-body--family);
@@ -99,14 +100,18 @@
     width: 100%;
   }
 
-  .footer-newsletter__input {
+  /* Input — higher specificity to override theme defaults (`.field__input`,
+     color-scheme `--color-input-background`, etc.). */
+  .footer-newsletter .footer-newsletter__input,
+  .footer-newsletter input.footer-newsletter__input {
     flex: 1 1 auto;
     min-width: 0;
     height: var(--fluid-40-48);
     padding: 0 19px;
-    background-color: var(--color-footer-input-bg);
-    border: 1px solid var(--color-footer-input-border);
+    background-color: #3D3D3D;
+    border: 1px solid #A9A9A9;
     border-radius: 100px;
+    box-shadow: none;
     /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
     font-family: 'Outfit', var(--font-body--family);
     font-weight: 300;
@@ -115,14 +120,34 @@
     color: #FFFFFF;
     outline: none;
     appearance: none;
+    -webkit-appearance: none;
   }
 
-  .footer-newsletter__input::placeholder {
-    color: var(--color-footer-input-placeholder);
+  .footer-newsletter .footer-newsletter__input::placeholder,
+  .footer-newsletter input.footer-newsletter__input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    opacity: 1;
   }
 
-  .footer-newsletter__input:focus-visible {
+  .footer-newsletter .footer-newsletter__input:hover,
+  .footer-newsletter input.footer-newsletter__input:hover {
+    background-color: #3D3D3D;
+    box-shadow: none;
+  }
+
+  .footer-newsletter .footer-newsletter__input:focus-visible,
+  .footer-newsletter input.footer-newsletter__input:focus-visible {
+    background-color: #3D3D3D;
     border-color: #FFFFFF;
+    box-shadow: none;
+  }
+
+  /* Disable browser autofill yellow tint */
+  .footer-newsletter .footer-newsletter__input:-webkit-autofill,
+  .footer-newsletter input.footer-newsletter__input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 100px #3D3D3D inset;
+    -webkit-text-fill-color: #FFFFFF;
+    caret-color: #FFFFFF;
   }
 
   .footer-newsletter__button {
