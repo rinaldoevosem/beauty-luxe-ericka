@@ -65,24 +65,6 @@
     color: #333333;
   }
 
-  /* Figma spec — SKU inside the Product Info Panel. */
-  .product-details product-sku-component {
-    display: block;
-    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
-    font-family: 'Outfit', var(--font-body--family);
-    font-weight: 300;
-    font-size: 0.8125rem;
-    line-height: 1.5;
-    text-align: right;
-    /* Non-palette color from Figma SKU spec */
-    color: #6C6C6C;
-  }
-
-  .product-details product-sku-component .sku::before {
-    /* "SKU" prefix per Figma spec — universal abbreviation, not localized. */
-    content: 'SKU ';
-  }
-
   @media screen and (min-width: 750px) {
     .product-details > .group-block {
       height: min-content;

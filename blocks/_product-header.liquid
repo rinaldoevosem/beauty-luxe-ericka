@@ -106,8 +106,7 @@
     line-height: 1.5;
     letter-spacing: 0.02em;
     text-transform: uppercase;
-    /* Non-palette color from Figma product header spec */
-    color: #6C6C6C;
+    color: var(--color-text-muted);
   }
 
   .product-header__actions {
@@ -125,8 +124,7 @@
     padding: 0;
     border: 0;
     background: none;
-    /* Non-palette color from Figma product header spec */
-    color: #6C6C6C;
+    color: var(--color-text-muted);
     cursor: pointer;
     transition: color 0.2s ease;
   }
@@ -153,6 +151,37 @@
   .product-header__icon svg {
     width: 100%;
     height: 100%;
+  }
+
+  /* Figma spec — SKU inside the Product header.
+     Higher specificity than `.paragraph:not(.button)` from base.css so the
+     theme's default font-size/color don't win. Targets the merchant-added
+     SKU block via its component tag. */
+  .product-header product-sku-component,
+  .product-header product-sku-component.paragraph,
+  .product-header product-sku-component.text-block {
+    display: block;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    text-align: right;
+    color: var(--color-text-muted);
+  }
+
+  .product-header product-sku-component .sku {
+    /* Inherit color so the override above wins over `.paragraph` color. */
+    margin: 0;
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  .product-header product-sku-component .sku::before {
+    /* "SKU" prefix per Figma spec — universal abbreviation, not localized. */
+    content: 'SKU ';
   }
 {% endstylesheet %}
 

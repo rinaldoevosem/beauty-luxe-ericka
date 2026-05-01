@@ -16,7 +16,7 @@
 
 <div class="product-subscribe-badge" role="note">
   <span class="svg-wrapper product-subscribe-badge__icon">
-    {{- 'icon-checkmark.svg' | inline_asset_content -}}
+    {{- 'iconsubscribe.svg' | inline_asset_content -}}
   </span>
   <span class="product-subscribe-badge__label">
     {{- label }} {{ discount_percent }}%
@@ -29,11 +29,10 @@
     align-items: center;
     gap: 6px;
     padding: 3px 8px;
-    /* Non-palette color from Figma subscribe badge spec */
-    background-color: rgba(13, 135, 86, 0.1);
-    /* Non-palette color from Figma subscribe badge spec */
-    border: 1px solid #008236;
+    background-color: var(--color-success-soft);
+    border: 1px solid var(--color-success);
     border-radius: 50px;
+    max-width: 156px;
   }
 
   .product-subscribe-badge__icon {
@@ -41,8 +40,7 @@
     flex-shrink: 0;
     width: 16px;
     height: 16px;
-    /* Non-palette color from Figma subscribe badge spec */
-    color: #008236;
+    color: var(--color-success);
   }
 
   .product-subscribe-badge__icon svg {
@@ -56,8 +54,7 @@
     font-weight: 400;
     font-size: 0.8125rem;
     line-height: 1.4;
-    /* Non-palette color from Figma subscribe badge spec */
-    color: #008236;
+    color: var(--color-success);
   }
 {% endstylesheet %}
 

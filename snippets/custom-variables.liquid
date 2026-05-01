@@ -1,0 +1,29 @@
+{% comment %}
+  Project-specific CSS custom properties not managed by theme settings.
+
+  These tokens come directly from the Figma spec (Sterling Forever / Beauty Luxe).
+  They do not match the global palette (Light Graphite #555555, Graphite #1F1F1F)
+  exactly, so they live here instead of being mapped to scheme variables.
+
+  Loaded once globally in `layout/theme.liquid` between `theme-styles-variables`
+  and `color-schemes`.
+{% endcomment %}
+
+<style>
+  :root {
+    /* Muted text — brand row, SKU, shipping note, installment line, learn more */
+    --color-text-muted: #6C6C6C;
+
+    /* Secondary text — feature tags, size note */
+    --color-text-secondary: #525252;
+
+    /* Primary text on light background — main price, short description body */
+    --color-text-primary: #0A0A0A;
+
+    /* Success accent — subscribe & save badge (border, icon, label) */
+    --color-success: #008236;
+
+    /* Success soft fill — subscribe & save badge background */
+    --color-success-soft: rgba(13, 135, 86, 0.1);
+  }
+</style>
