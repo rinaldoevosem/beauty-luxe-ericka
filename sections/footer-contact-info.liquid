@@ -1,0 +1,111 @@
+{% doc %}
+  Footer Contact Info Bar (top tier of the footer).
+
+  Full-width, dark background with a hairline border-bottom that separates this
+  bar from the rest of the footer. Renders 4 equal-width contact columns by
+  default (Customer Service, Call Us, Get in Touch, Address). Merchants can add
+  more columns via the editor.
+
+  Figma: Beauty Luxe / Footer / Section (37:1013)
+{% enddoc %}
+ 
+<div class="footer-contact-info" data-section-id="{{ section.id }}">
+  <div class="footer-contact-info__inner">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .footer-contact-info {
+    width: 100%;
+    background-color: var(--color-footer-dark);
+    border-block-end: 1px solid var(--color-footer-border);
+  }
+
+  .footer-contact-info__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--fluid-10-12);
+    padding-block: var(--fluid-25-32);
+    padding-inline: var(--fluid-16-80);
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    .footer-contact-info__inner {
+      gap: var(--fluid-25-32) var(--fluid-10-12);
+      align-items: stretch;
+    }
+
+    .footer-contact-info__inner > .footer-contact-column {
+      flex: 1 1 calc(50% - var(--fluid-10-12));
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .footer-contact-info__inner {
+      align-items: stretch;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Footer contact info",
+  "tag": "section",
+  "class": "section--full-width",
+  "blocks": [
+    { "type": "_footer-contact-column" }
+  ],
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Full-width contact info bar at the top of the footer. Add up to 4 columns; on tablet they wrap to 2 per row, on mobile they stack."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer contact info",
+      "blocks": {
+        "col_customer_service": {
+          "type": "_footer-contact-column",
+          "settings": {
+            "icon": "icon-customer-service.svg",
+            "label": "Customer Service",
+            "value": "Mon-Sat - 9am-6pm"
+          }
+        },
+        "col_call": {
+          "type": "_footer-contact-column",
+          "settings": {
+            "icon": "icon-phone.svg",
+            "label": "Call Us",
+            "value": "+1 (818) 761-7400"
+          }
+        },
+        "col_email": {
+          "type": "_footer-contact-column",
+          "settings": {
+            "icon": "icon-get-in-touch.svg",
+            "label": "Get in Touch",
+            "value": "info@BeautyLuxe.com"
+          }
+        },
+        "col_address": {
+          "type": "_footer-contact-column",
+          "settings": {
+            "icon": "icon-location.svg",
+            "label": "Address",
+            "value_emphasis": "Burbank Retail",
+            "value": "2721 W Magnolia Blvd"
+          }
+        }
+      },
+      "block_order": ["col_customer_service", "col_call", "col_email", "col_address"]
+    }
+  ]
+}
+{% endschema %}

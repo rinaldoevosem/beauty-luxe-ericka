@@ -1,0 +1,154 @@
+{% doc %}
+  Renders one column of the Footer Contact Info Bar.
+
+  Layout: icon + (label / value_emphasis / value) stacked vertically.
+  - Icon (28px or 32px): chosen via `icon` setting from a curated list of footer icons.
+  - Label: white, Outfit Medium 14px.
+  - Value emphasis (optional): white Regular 14px. First line — used for the
+    venue name in the Address column.
+  - Value: white-80 (#D6D6D6) Light 14px. The standard value line.
+
+  @example
+  {% content_for 'block', type: '_footer-contact-column', id: 'col-1' %}
+{% enddoc %}
+
+{%- liquid
+  assign block_settings = block.settings
+  assign icon_name = block_settings.icon | default: 'icon-customer-service.svg'
+  assign icon_size_token = '--fluid-28-28'
+  if block_settings.icon == 'icon-location.svg'
+    assign icon_size_token = '--fluid-32-32'
+  endif
+-%}
+
+<div
+  class="footer-contact-column"
+  style="--icon-size: var({{ icon_size_token }});"
+  {{ block.shopify_attributes }}
+>
+  <span class="svg-wrapper footer-contact-column__icon" aria-hidden="true">
+    {{- icon_name | inline_asset_content -}}
+  </span>
+  <div class="footer-contact-column__text">
+    <p class="footer-contact-column__label">{{ block_settings.label | escape }}</p>
+    {%- if block_settings.value_emphasis != blank -%}
+      <p class="footer-contact-column__emphasis">{{ block_settings.value_emphasis | escape }}</p>
+    {%- endif -%}
+    {%- if block_settings.value != blank -%}
+      <p class="footer-contact-column__value">{{ block_settings.value | escape }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .footer-contact-column {
+    display: flex;
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  .footer-contact-column__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    width: var(--icon-size);
+    height: var(--icon-size);
+    color: #FFFFFF;
+  }
+
+  .footer-contact-column__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .footer-contact-column__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  /* Mobile: icon stacked ABOVE text, 2 columns per row, 10px gap. */
+  @media screen and (max-width: 749px) {
+    .footer-contact-column {
+      flex: 0 1 calc(50% - var(--fluid-10-12) / 2);
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+
+  /* Desktop / tablet: icon to the LEFT of text. */
+  @media screen and (min-width: 750px) {
+    .footer-contact-column {
+      flex: 1 1 0;
+      flex-direction: row;
+      gap: var(--fluid-10-12);
+    }
+
+    .footer-contact-column__text {
+      gap: var(--fluid-4-4);
+    }
+  }
+
+  .footer-contact-column__label,
+  .footer-contact-column__emphasis,
+  .footer-contact-column__value {
+    margin: 0;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-size: var(--fluid-14-14);
+    line-height: 1.5;
+  }
+
+  .footer-contact-column__label {
+    font-weight: 500;
+    color: #FFFFFF;
+  }
+
+  .footer-contact-column__emphasis {
+    font-weight: 400;
+    color: #FFFFFF;
+  }
+
+  .footer-contact-column__value {
+    font-weight: 300;
+    color: var(--color-footer-text-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Footer contact column",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "icon-customer-service.svg", "label": "Customer service" },
+        { "value": "icon-phone.svg", "label": "Phone" },
+        { "value": "icon-get-in-touch.svg", "label": "Get in touch" },
+        { "value": "icon-location.svg", "label": "Location" }
+      ],
+      "default": "icon-customer-service.svg"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Customer Service"
+    },
+    {
+      "type": "text",
+      "id": "value_emphasis",
+      "label": "Emphasis (optional)",
+      "info": "White Regular line shown above the value. Use for venue name in the Address column."
+    },
+    {
+      "type": "text",
+      "id": "value",
+      "label": "Value",
+      "default": "Mon-Sat - 9am-6pm"
+    }
+  ]
+}
+{% endschema %}

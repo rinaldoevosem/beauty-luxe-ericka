@@ -9,7 +9,13 @@
    ───────────────────────────────────────────────────────────── */
 
 :root {
-  /* Los tokens se agregan orgánicamente conforme se construyen las secciones. */
-  /* Ejemplo (NO incluir hasta que el dev de Figma provea valores mobile+desktop): */
-  /* --fluid-28-48: clamp(28px, calc(48 / var(--fluid-base) * 100vw), calc(48 / var(--fluid-base) * var(--fluid-cap) * 1px)); */
+  /* Footer Contact Info Bar */
+  /* Mobile values are reasonable defaults — adjust if Figma provides mobile spec. */
+  --fluid-4-4: clamp(4px, calc(4 / var(--fluid-base) * 100vw), calc(4 / var(--fluid-base) * var(--fluid-cap) * 1px));
+  --fluid-10-12: clamp(10px, calc(12 / var(--fluid-base) * 100vw), calc(12 / var(--fluid-base) * var(--fluid-cap) * 1px));
+  --fluid-14-14: clamp(14px, calc(14 / var(--fluid-base) * 100vw), calc(14 / var(--fluid-base) * var(--fluid-cap) * 1px));
+  --fluid-25-32: clamp(25px, calc(32 / var(--fluid-base) * 100vw), calc(32 / var(--fluid-base) * var(--fluid-cap) * 1px));
+  --fluid-28-28: clamp(28px, calc(28 / var(--fluid-base) * 100vw), calc(28 / var(--fluid-base) * var(--fluid-cap) * 1px));
+  --fluid-32-32: clamp(32px, calc(32 / var(--fluid-base) * 100vw), calc(32 / var(--fluid-base) * var(--fluid-cap) * 1px));
+  --fluid-16-80: clamp(16px, calc(80 / var(--fluid-base) * 100vw), calc(80 / var(--fluid-base) * var(--fluid-cap) * 1px));
 }

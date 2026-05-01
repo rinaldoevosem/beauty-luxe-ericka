@@ -335,4 +335,178 @@
   .shopify-payment-button__more-options[aria-hidden='true'] {
     display: none;
   }
+
+  /* ───────────────────────────────────────────────────────────
+     Buy buttons block — Figma: Quantity Stepper + Add to BAG + Buy It Now
+     ─────────────────────────────────────────────────────────── */
+
+  /* Layout: row 1 = quantity stepper + Add to BAG, row 2 = Buy It Now (full width) */
+  .buy-buttons-block .product-form-buttons {
+    gap: 0.75rem;
+    row-gap: 0.75rem;
+  }
+
+  .buy-buttons-block .product-form-buttons:not(:has(.quantity-rules)) {
+    gap: 0.75rem;
+
+    @media screen and (min-width: 750px) {
+      gap: 0.75rem;
+    }
+  }
+
+  /* a) Quantity Stepper — 125x48, pill, 1.5px #E7E7E7 border */
+  .buy-buttons-block .quantity-selector-wrapper {
+    flex: 0 0 auto;
+  }
+
+  .buy-buttons-block .product-details .quantity-selector,
+  .buy-buttons-block .quantity-selector {
+    /* Non-palette color from Figma — quantity stepper border */
+    width: 7.8125rem; /* 125px */
+    height: 3rem; /* 48px */
+    flex: 0 0 7.8125rem;
+    padding: 0;
+    border: 1.5px solid #E7E7E7;
+    border-radius: 50px;
+    background-color: #FFFFFF;
+  }
+
+  .buy-buttons-block .quantity-selector :is(.quantity-minus, .quantity-plus) {
+    width: 2.5rem;
+    height: 100%;
+    /* Non-palette color from Figma — stepper icon color */
+    color: #0A0A0A;
+    border-radius: 50px;
+  }
+
+  .buy-buttons-block .quantity-selector .svg-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .buy-buttons-block .quantity-selector .svg-wrapper svg {
+    width: 14px;
+    height: 20px;
+  }
+
+  .buy-buttons-block .quantity-selector input[type='number'] {
+    flex: 1 1 auto;
+    max-width: none;
+    height: 100%;
+    font-family: var(--font-accent--family);
+    font-weight: 400;
+    font-size: 1rem; /* Outfit Regular 16px */
+    /* Non-palette color from Figma — stepper text color */
+    color: #0A0A0A;
+    background-color: transparent;
+  }
+
+  /* b) Add to BAG — flex 1, 48px tall, pill, 1.5px #0A0A0A outline */
+  .buy-buttons-block .add-to-cart-button,
+  .buy-buttons-block .add-to-cart-button.button-secondary {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 100%;
+    height: 3rem; /* 48px */
+    padding-block: 0;
+    padding-inline: 2rem; /* 32px */
+    /* Non-palette color from Figma — Add to BAG outline */
+    border-radius: 50px;
+    background-color: #FFFFFF;
+    color: #0A0A0A;
+    box-shadow: inset 0 0 0 1.5px #0A0A0A;
+    font-family: var(--font-heading--family); /* Inter */
+    font-weight: 500;
+    font-size: 0.875rem; /* 14px */
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+
+  .buy-buttons-block .add-to-cart-button:hover:not([disabled]),
+  .buy-buttons-block .add-to-cart-button.button-secondary:hover:not([disabled]) {
+    background-color: #0A0A0A;
+    color: #FFFFFF;
+    box-shadow: inset 0 0 0 1.5px #0A0A0A;
+  }
+
+  .buy-buttons-block .add-to-cart-button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .buy-buttons-block .add-to-cart-button .add-to-cart-text {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .buy-buttons-block .add-to-cart-button .add-to-cart-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+  }
+
+  .buy-buttons-block .add-to-cart-button .add-to-cart-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* c) BUY IT NOW — full width, 48px, solid #0A0A0A pill */
+  .buy-buttons-block .accelerated-checkout-block {
+    flex: 1 0 100%;
+    width: 100%;
+  }
+
+  .buy-buttons-block .shopify-payment-button {
+    width: 100%;
+  }
+
+  .buy-buttons-block button.shopify-payment-button__button--unbranded {
+    width: 100%;
+    height: 3rem; /* 48px */
+    padding-block: 0;
+    padding-inline: 2rem;
+    /* Non-palette color from Figma — Buy It Now solid black */
+    --button-color: #FFFFFF;
+    --button-background-color: #0A0A0A;
+    --button-border-color: #0A0A0A;
+    --button-border-width: 0;
+    border-radius: 50px;
+    font-family: var(--font-heading--family); /* Inter */
+    font-weight: 500;
+    font-size: 0.875rem; /* 14px */
+    text-transform: uppercase;
+    letter-spacing: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .buy-buttons-block button.shopify-payment-button__button--unbranded:hover:not([disabled]) {
+    --button-background-color: #1F1F1F;
+    background-color: #1F1F1F;
+  }
+
+  /* Arrow-right icon (28x20) appended to BUY IT NOW */
+  .buy-buttons-block button.shopify-payment-button__button--unbranded::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 20px;
+    margin-inline-start: 0.5rem;
+    background-color: currentColor;
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 20' fill='none'><path stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M2 10h22m0 0-6-6m6 6-6 6'/></svg>");
+    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 20' fill='none'><path stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M2 10h22m0 0-6-6m6 6-6 6'/></svg>");
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+  }
 {% endstylesheet %}

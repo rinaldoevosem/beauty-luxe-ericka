@@ -11,6 +11,47 @@
   "type": "footer",
   "name": "Footer",
   "sections": {
+    "footer_contact_info_x9KbGZ": {
+      "type": "footer-contact-info",
+      "blocks": {
+        "col_customer_service": {
+          "type": "_footer-contact-column",
+          "settings": {
+            "icon": "icon-customer-service.svg",
+            "label": "Customer Service",
+            "value": "Mon-Sat - 9am-6pm"
+          }
+        },
+        "col_call": {
+          "type": "_footer-contact-column",
+          "settings": {
+            "icon": "icon-phone.svg",
+            "label": "Call Us",
+            "value": "+1 (818) 761-7400"
+          }
+        },
+        "col_email": {
+          "type": "_footer-contact-column",
+          "settings": {
+            "icon": "icon-get-in-touch.svg",
+            "label": "Get in Touch",
+            "value": "info@BeautyLuxe.com"
+          }
+        },
+        "col_address": {
+          "type": "_footer-contact-column",
+          "settings": {
+            "icon": "icon-location.svg",
+            "label": "Address",
+            "value_emphasis": "Burbank Retail",
+            "value": "2721 W Magnolia Blvd"
+          }
+        }
+      },
+      "block_order": ["col_customer_service", "col_call", "col_email", "col_address"],
+      "name": "Footer contact info",
+      "settings": {}
+    },
     "footer_m9NzUG": {
       "type": "footer",
       "blocks": {
@@ -205,6 +246,7 @@
     }
   },
   "order": [
+    "footer_contact_info_x9KbGZ",
     "footer_m9NzUG",
     "footer_utilities_jLGE8U"
   ]
