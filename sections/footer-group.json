@@ -19,24 +19,30 @@
           "settings": {
             "icon": "icon-customer-service.svg",
             "label": "Customer Service",
+            "value_emphasis": "",
             "value": "Mon-Sat - 9am-6pm"
-          }
+          },
+          "blocks": {}
         },
         "col_call": {
           "type": "_footer-contact-column",
           "settings": {
             "icon": "icon-phone.svg",
             "label": "Call Us",
+            "value_emphasis": "",
             "value": "+1 (818) 761-7400"
-          }
+          },
+          "blocks": {}
         },
         "col_email": {
           "type": "_footer-contact-column",
           "settings": {
             "icon": "icon-get-in-touch.svg",
             "label": "Get in Touch",
+            "value_emphasis": "",
             "value": "info@BeautyLuxe.com"
-          }
+          },
+          "blocks": {}
         },
         "col_address": {
           "type": "_footer-contact-column",
@@ -45,10 +51,16 @@
             "label": "Address",
             "value_emphasis": "Burbank Retail",
             "value": "2721 W Magnolia Blvd"
-          }
+          },
+          "blocks": {}
         }
       },
-      "block_order": ["col_customer_service", "col_call", "col_email", "col_address"],
+      "block_order": [
+        "col_customer_service",
+        "col_call",
+        "col_email",
+        "col_address"
+      ],
       "name": "Footer contact info",
       "settings": {}
     },
@@ -62,41 +74,54 @@
             "subtitle": "<p>Stay inspired with artist tips, product launches, and behind-the-scenes looks from the beauty industry.</p>",
             "placeholder": "Enter your email",
             "button_label": "Sign up"
-          }
+          },
+          "blocks": {}
         },
         "col_shop": {
           "type": "_footer-link-column",
           "settings": {
-            "heading": "SHOP"
-          }
+            "heading": "SHOP",
+            "menu": "shop-menu"
+          },
+          "blocks": {}
         },
         "col_discover": {
           "type": "_footer-link-column",
           "settings": {
-            "heading": "DISCOVER"
-          }
+            "heading": "DISCOVER",
+            "menu": ""
+          },
+          "blocks": {}
         },
         "col_care": {
           "type": "_footer-link-column",
           "settings": {
-            "heading": "CUSTOMER CARE"
-          }
+            "heading": "CUSTOMER CARE",
+            "menu": ""
+          },
+          "blocks": {}
         },
         "col_account": {
           "type": "_footer-link-column",
           "settings": {
-            "heading": "ACCOUNT"
-          }
+            "heading": "ACCOUNT",
+            "menu": ""
+          },
+          "blocks": {}
         }
       },
-      "block_order": ["newsletter", "col_shop", "col_discover", "col_care", "col_account"],
+      "block_order": [
+        "newsletter",
+        "col_shop",
+        "col_discover",
+        "col_care",
+        "col_account"
+      ],
       "name": "Footer newsletter & links",
       "settings": {}
     },
     "footer_localization_bar_Q7zMnL": {
       "type": "footer-localization-bar",
-      "blocks": {},
-      "block_order": [],
       "name": "Footer localization bar",
       "settings": {
         "show_country_selector": true,
