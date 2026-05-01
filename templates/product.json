@@ -240,6 +240,17 @@
                   },
                   "blocks": {}
                 },
+                "product-rating-badge": {
+                  "type": "_product-rating-badge",
+                  "static": true,
+                  "settings": {
+                    "rating_value": "5.0",
+                    "rating_count": 1699,
+                    "show_badge": true,
+                    "badge_text": "Industry Bestseller"
+                  },
+                  "blocks": {}
+                },
                 "product-feature-tags": {
                   "type": "_product-feature-tags",
                   "static": true,
@@ -258,12 +269,6 @@
                   },
                   "blocks": {}
                 },
-                "product-shipping-note": {
-                  "type": "_product-shipping-note",
-                  "static": true,
-                  "settings": {},
-                  "blocks": {}
-                },
                 "product-subscribe-badge": {
                   "type": "_product-subscribe-badge",
                   "static": true,
@@ -273,8 +278,8 @@
                   },
                   "blocks": {}
                 },
-                "product-short-description": {
-                  "type": "_product-short-description",
+                "product-shipping-note": {
+                  "type": "_product-shipping-note",
                   "static": true,
                   "settings": {},
                   "blocks": {}
@@ -284,6 +289,26 @@
                 "text_9WrHrY",
                 "sku_rmJwaq"
               ]
+            },
+            "product-short-description": {
+              "type": "_product-short-description",
+              "static": true,
+              "settings": {},
+              "blocks": {}
+            },
+            "product-info-accordion-mobile": {
+              "type": "product-info-accordion",
+              "static": true,
+              "settings": {
+                "about_title": "About the Product",
+                "ingredients_title": "Ingredients",
+                "ingredients_text": "<p>;l;l;l;</p>",
+                "how_to_use_title": "How to Use",
+                "how_to_use_text": "<p>llll</p>",
+                "shipping_title": "Shipping & Returns",
+                "shipping_text": "<p>kkk</p>"
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -293,6 +318,20 @@
             "buy_buttons_eYQEYi",
             "text_aEtTtq"
           ]
+        },
+        "product-info-accordion": {
+          "type": "product-info-accordion",
+          "static": true,
+          "settings": {
+            "about_title": "About the Product",
+            "ingredients_title": "Ingredients",
+            "ingredients_text": "",
+            "how_to_use_title": "How to Use",
+            "how_to_use_text": "",
+            "shipping_title": "Shipping & Returns",
+            "shipping_text": ""
+          },
+          "blocks": {}
         }
       },
       "settings": {
