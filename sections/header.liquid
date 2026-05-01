@@ -101,20 +101,15 @@
     </li>
   {%- endif -%}
 
-  <li class="header-bar__action">
-    <a
-      href="{{ routes.cart_url }}"
-      class="header-bar__action-link"
-      aria-label="Bag{% if cart.item_count > 0 %}, {{ cart.item_count }}{% endif %}"
-    >
-      <span class="header-bar__icon" aria-hidden="true">
-        {{ 'Cart-Icon.svg' | inline_asset_content }}
-      </span>
-      <span class="header-bar__action-label">Bag</span>
-      {%- if cart.item_count > 0 -%}
-        <span class="header-bar__action-count" aria-hidden="true">{{ cart.item_count }}</span>
-      {%- endif -%}
-    </a>
+  <li class="header-bar__action header-bar__action--cart">
+    {% render 'cart-drawer-trigger',
+      trigger_class: 'header-bar__action-link',
+      icon_asset: 'Cart-Icon.svg',
+      icon_class: 'header-bar__icon',
+      label: 'Bag',
+      label_class: 'header-bar__action-label',
+      aria_label: 'Bag'
+    %}
   </li>
 </ul>
 
@@ -260,6 +255,45 @@
     font-weight: 500;
     line-height: 16px;
     text-align: center;
+  }
+
+  /* Live count badge (Horizon's <cart-bubble> rendered by cart-icon.js).
+     Replaces the static .header-bar__action-count so the count updates
+     in real time after add-to-cart events. */
+  .header-bar__action-link .cart-drawer-trigger__icon-host {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .header-bar__action-link .cart-bubble {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    width: auto;
+    min-inline-size: 16px;
+    block-size: 16px;
+    aspect-ratio: auto;
+    padding: 0 4px;
+    border-radius: 50px;
+    background-color: var(--color-dark-100);
+  }
+
+  .header-bar__action-link .cart-bubble.visually-hidden {
+    display: none;
+  }
+
+  .header-bar__action-link .cart-bubble__background {
+    display: none;
+  }
+
+  .header-bar__action-link .cart-bubble__text {
+    color: var(--color-white-100);
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 16px;
   }
 
   .header-bar__action--mobile-only {
