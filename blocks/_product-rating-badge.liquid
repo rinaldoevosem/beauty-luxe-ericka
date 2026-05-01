@@ -1,0 +1,142 @@
+{% doc %}
+  Renders the rating row inside the Product Header:
+  5 star icons (14×14, 2px gap) + rating text "5.0 (1699)" (Outfit Light 13px, #6C6C6C)
+  + "Industry Bestseller" badge pill (background #0A0A0A, white, Outfit Regular 13px).
+
+  Static block — values configured via block settings, not pulled from a reviews app.
+
+  @example
+  {% content_for 'block', type: '_product-rating-badge', id: 'product-rating-badge' %}
+{% enddoc %}
+
+{%- liquid
+  assign rating_value = block.settings.rating_value | default: '5.0'
+  assign rating_count = block.settings.rating_count
+  assign show_badge = block.settings.show_badge
+  assign badge_text = block.settings.badge_text
+-%}
+
+<div class="product-rating-badge">
+  <div
+    class="product-rating-badge__stars"
+    role="img"
+    aria-label="Rating: {{ rating_value }} out of 5"
+  >
+    {%- for i in (1..5) -%}
+      <span
+        class="svg-wrapper product-rating-badge__star"
+        aria-hidden="true"
+      >
+        {{- 'icon-star.svg' | inline_asset_content -}}
+      </span>
+    {%- endfor -%}
+  </div>
+
+  <span class="product-rating-badge__count">
+    {{- rating_value }} ({{ rating_count -}})
+  </span>
+
+  {%- if show_badge and badge_text != blank -%}
+    <span class="product-rating-badge__pill">
+      {{- badge_text | escape -}}
+    </span>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .product-rating-badge {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .product-rating-badge__stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    /* Non-palette color from Figma — filled star color */
+    color: #0A0A0A;
+  }
+
+  .product-rating-badge__star {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+  }
+
+  .product-rating-badge__star svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .product-rating-badge__count {
+    /* RULE EXCEPTION: body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: 0.8125rem; /* 13px */
+    line-height: 1.5;
+    /* Non-palette color from Figma — rating count text */
+    color: #6C6C6C;
+  }
+
+  .product-rating-badge__pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 50px;
+    /* Non-palette colors from Figma — Industry Bestseller badge */
+    background-color: #0A0A0A;
+    color: #FFFFFF;
+    /* RULE EXCEPTION: body font setting is Jost, but spec requires Outfit Regular. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 400;
+    font-size: 0.8125rem; /* 13px */
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product rating badge",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Rating"
+    },
+    {
+      "type": "text",
+      "id": "rating_value",
+      "label": "Rating value",
+      "default": "5.0"
+    },
+    {
+      "type": "number",
+      "id": "rating_count",
+      "label": "Review count",
+      "default": 1699
+    },
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Industry Bestseller"
+    }
+  ]
+}
+{% endschema %}

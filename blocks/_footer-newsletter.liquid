@@ -1,0 +1,214 @@
+{% doc %}
+  Newsletter sign-up block for the Footer.
+
+  Layout (top → bottom):
+  - Heading "Join Our Newsletter" — Jost Regular 24px, white, letter-spacing -1px.
+  - Subtitle — Outfit Light 14px, #D6D6D6.
+  - Form — pill-shaped email input (#3D3D3D bg, #A9A9A9 border) + "Sign up" button
+    (white bg, #0A0A0A text, uppercase). Uses Shopify's customer form.
+
+  Wrapped in `<div class="footer-newsletter">` with a max-width of 465px so it
+  fits the left side of the Footer Newsletter & Links section.
+
+  @example
+  {% content_for 'block', type: '_footer-newsletter', id: 'newsletter' %}
+{% enddoc %}
+
+{%- liquid
+  assign block_settings = block.settings
+  assign heading = block_settings.heading | default: 'Join Our Newsletter'
+  assign subtitle = block_settings.subtitle
+  assign placeholder = block_settings.placeholder | default: 'Enter your email'
+  assign button_label = block_settings.button_label | default: 'Sign up'
+-%}
+
+<div class="footer-newsletter" {{ block.shopify_attributes }}>
+  {%- if heading != blank -%}
+    <h2 class="footer-newsletter__heading">{{ heading | escape }}</h2>
+  {%- endif -%}
+
+  {%- if subtitle != blank -%}
+    <p class="footer-newsletter__subtitle">{{ subtitle }}</p>
+  {%- endif -%}
+
+  {%- form 'customer', class: 'footer-newsletter__form' -%}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+
+    {%- if form.posted_successfully? -%}
+      <p class="footer-newsletter__message footer-newsletter__message--success" role="status">
+        {{ 'newsletter.success' | t | default: 'Thanks for subscribing!' }}
+      </p>
+    {%- elsif form.errors -%}
+      <p class="footer-newsletter__message footer-newsletter__message--error" role="alert">
+        {{ form.errors.translated_messages['email'] | default: form.errors.messages.first }}
+      </p>
+    {%- endif -%}
+
+    <label class="visually-hidden" for="footer-newsletter-email-{{ block.id }}">
+      {{ placeholder }}
+    </label>
+    <input
+      id="footer-newsletter-email-{{ block.id }}"
+      class="footer-newsletter__input"
+      type="email"
+      name="contact[email]"
+      placeholder="{{ placeholder | escape }}"
+      autocomplete="email"
+      required
+    >
+    <button type="submit" class="footer-newsletter__button">
+      {{ button_label | escape }}
+    </button>
+  {%- endform -%}
+</div>
+
+{% stylesheet %}
+  .footer-newsletter {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fluid-16-16);
+    width: 100%;
+    max-width: 465px;
+  }
+
+  .footer-newsletter__heading {
+    margin: 0;
+    /* Jost is the body family in this project; Figma calls for Jost Regular 24px. */
+    font-family: var(--font-body--family);
+    font-weight: 400;
+    font-size: var(--fluid-20-24);
+    line-height: 1.2;
+    letter-spacing: -1px;
+    color: #FFFFFF;
+  }
+
+  .footer-newsletter__subtitle {
+    margin: 0;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: var(--fluid-14-14);
+    line-height: 1.5;
+    color: var(--color-footer-text-muted);
+  }
+
+  .footer-newsletter__form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .footer-newsletter__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: var(--fluid-40-48);
+    padding: 0 19px;
+    background-color: var(--color-footer-input-bg);
+    border: 1px solid var(--color-footer-input-border);
+    border-radius: 100px;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: var(--fluid-14-14);
+    line-height: 1.5;
+    color: #FFFFFF;
+    outline: none;
+    appearance: none;
+  }
+
+  .footer-newsletter__input::placeholder {
+    color: var(--color-footer-input-placeholder);
+  }
+
+  .footer-newsletter__input:focus-visible {
+    border-color: #FFFFFF;
+  }
+
+  .footer-newsletter__button {
+    flex: 0 0 auto;
+    min-width: 119px;
+    height: var(--fluid-40-48);
+    padding: 0 24px;
+    background-color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    border-radius: 100px;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Medium. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 500;
+    font-size: var(--fluid-14-14);
+    line-height: 1.5;
+    color: var(--color-footer-dark);
+    text-transform: uppercase;
+    letter-spacing: 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .footer-newsletter__button:hover,
+  .footer-newsletter__button:focus-visible {
+    background-color: var(--color-footer-text-muted);
+  }
+
+  .footer-newsletter__message {
+    margin: 0;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 400;
+    font-size: var(--fluid-14-14);
+    line-height: 1.5;
+    flex-basis: 100%;
+  }
+
+  .footer-newsletter__message--success {
+    color: #FFFFFF;
+  }
+
+  .footer-newsletter__message--error {
+    color: #FFB4B4;
+  }
+
+  @media screen and (max-width: 749px) {
+    .footer-newsletter__form {
+      flex-wrap: wrap;
+    }
+
+    .footer-newsletter__input,
+    .footer-newsletter__button {
+      flex: 1 1 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Footer newsletter",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Join Our Newsletter"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "<p>Stay inspired with artist tips, product launches, and behind-the-scenes looks from the beauty industry.</p>"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Sign up"
+    }
+  ]
+}
+{% endschema %}

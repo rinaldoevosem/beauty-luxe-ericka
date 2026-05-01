@@ -1,0 +1,109 @@
+{% doc %}
+  Footer link column.
+
+  Renders a column with a header (Outfit Medium 14px, white, uppercase by default)
+  and a list of links pulled from a Shopify navigation menu (white-80 #D6D6D6,
+  Outfit Light 14px, line-height 26px).
+
+  Configure the menu in Shopify admin → Online Store → Navigation, then select
+  it in the block's "Menu" setting.
+
+  @example
+  {% content_for 'block', type: '_footer-link-column', id: 'col-shop' %}
+{% enddoc %}
+
+{%- liquid
+  assign block_settings = block.settings
+  assign menu = block_settings.menu
+  assign heading = block_settings.heading | default: menu.title
+-%}
+
+<div class="footer-link-column" {{ block.shopify_attributes }}>
+  {%- if heading != blank -%}
+    <p class="footer-link-column__heading">{{ heading | escape }}</p>
+  {%- endif -%}
+
+  {%- if menu != blank and menu.links.size > 0 -%}
+    <nav
+      class="footer-link-column__nav"
+      {%- if heading == blank %} aria-label="{{ menu.title | escape }}"{% endif -%}
+    >
+      <ul class="footer-link-column__list">
+        {%- for link in menu.links -%}
+          <li class="footer-link-column__item">
+            <a href="{{ link.url }}" class="footer-link-column__link">
+              {{- link.title | escape -}}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .footer-link-column {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: var(--fluid-8-8);
+    min-width: 0;
+  }
+
+  .footer-link-column__heading {
+    margin: 0;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Medium. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 500;
+    font-size: var(--fluid-14-14);
+    line-height: 1.5;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .footer-link-column__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer-link-column__link {
+    display: inline-block;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: var(--fluid-14-14);
+    line-height: 26px;
+    color: var(--color-footer-text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .footer-link-column__link:hover,
+  .footer-link-column__link:focus-visible {
+    color: #FFFFFF;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Footer link column",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Defaults to the menu title if left empty.",
+      "default": "SHOP"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "info": "Select a navigation menu from Online Store → Navigation."
+    }
+  ]
+}
+{% endschema %}

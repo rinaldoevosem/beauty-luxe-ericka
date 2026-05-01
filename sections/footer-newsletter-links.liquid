@@ -1,0 +1,142 @@
+{% doc %}
+  Footer Newsletter & Link Columns (middle tier of the footer).
+
+  Layout (desktop):
+  - Left: newsletter sign-up form (max-width 465px).
+  - Right: 4 link columns with 80px gap, justified to the right.
+
+  Wraps to a vertical stack on tablet and mobile. The dark background and
+  border-bottom continue from the Contact Info Bar via the same color tokens.
+
+  Figma: Beauty Luxe / Footer / Newsletter + Links (37:1046)
+{% enddoc %}
+
+<div class="footer-newsletter-links" data-section-id="{{ section.id }}">
+  <div class="footer-newsletter-links__inner">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .footer-newsletter-links {
+    width: 100%;
+    background-color: var(--color-footer-dark);
+  }
+
+  .footer-newsletter-links__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--fluid-24-40);
+    align-items: flex-start;
+    padding-block: var(--fluid-32-80);
+    padding-inline: var(--fluid-16-80);
+  }
+
+  /* Newsletter takes the left column (fixed max-width). */
+  .footer-newsletter-links__inner > .footer-newsletter {
+    flex: 0 0 auto;
+  }
+
+  /* All link columns flow into a flex group on the right with 80px gap. */
+  .footer-newsletter-links__inner > .footer-link-column {
+    flex: 0 0 auto;
+  }
+
+  @media screen and (min-width: 990px) {
+    .footer-newsletter-links__inner {
+      flex-wrap: nowrap;
+    }
+
+    .footer-newsletter-links__inner > .footer-link-column {
+      margin-inline-start: var(--fluid-32-80);
+    }
+
+    .footer-newsletter-links__inner > .footer-link-column:first-of-type {
+      margin-inline-start: auto;
+    }
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    .footer-newsletter-links__inner {
+      column-gap: var(--fluid-32-80);
+      row-gap: var(--fluid-24-40);
+    }
+
+    .footer-newsletter-links__inner > .footer-newsletter {
+      flex: 1 1 100%;
+    }
+
+    .footer-newsletter-links__inner > .footer-link-column {
+      flex: 1 1 calc(50% - var(--fluid-32-80));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .footer-newsletter-links__inner > .footer-newsletter,
+    .footer-newsletter-links__inner > .footer-link-column {
+      flex: 1 1 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Footer newsletter & links",
+  "tag": "section",
+  "class": "section--full-width",
+  "blocks": [
+    { "type": "_footer-newsletter" },
+    { "type": "_footer-link-column" }
+  ],
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Newsletter on the left + link columns on the right. Add one Newsletter block first, then up to 4 Link Column blocks. Configure each column's links via Online Store → Navigation."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer newsletter & links",
+      "blocks": {
+        "newsletter": {
+          "type": "_footer-newsletter",
+          "settings": {
+            "heading": "Join Our Newsletter",
+            "subtitle": "<p>Stay inspired with artist tips, product launches, and behind-the-scenes looks from the beauty industry.</p>",
+            "placeholder": "Enter your email",
+            "button_label": "Sign up"
+          }
+        },
+        "col_shop": {
+          "type": "_footer-link-column",
+          "settings": {
+            "heading": "SHOP"
+          }
+        },
+        "col_discover": {
+          "type": "_footer-link-column",
+          "settings": {
+            "heading": "DISCOVER"
+          }
+        },
+        "col_care": {
+          "type": "_footer-link-column",
+          "settings": {
+            "heading": "CUSTOMER CARE"
+          }
+        },
+        "col_account": {
+          "type": "_footer-link-column",
+          "settings": {
+            "heading": "ACCOUNT"
+          }
+        }
+      },
+      "block_order": ["newsletter", "col_shop", "col_discover", "col_care", "col_account"]
+    }
+  ]
+}
+{% endschema %}

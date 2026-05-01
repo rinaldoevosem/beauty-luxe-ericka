@@ -54,6 +54,11 @@
     </div>
   </div>
 
+  {% content_for 'block',
+    type: '_product-rating-badge',
+    id: 'product-rating-badge'
+  %}
+
   {% content_for 'blocks' %}
 
   {% content_for 'block',
