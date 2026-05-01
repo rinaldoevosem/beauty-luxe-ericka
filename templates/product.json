@@ -220,6 +220,26 @@
                   },
                   "blocks": {}
                 },
+                "sku_rmJwaq": {
+                  "type": "sku",
+                  "name": "t:names.product_sku",
+                  "settings": {
+                    "type_preset": "",
+                    "width": "100%",
+                    "alignment": "left",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "color": "var(--color-foreground)",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
                 "product-feature-tags": {
                   "type": "_product-feature-tags",
                   "static": true,
@@ -261,7 +281,8 @@
                 }
               },
               "block_order": [
-                "text_9WrHrY"
+                "text_9WrHrY",
+                "sku_rmJwaq"
               ]
             }
           },
