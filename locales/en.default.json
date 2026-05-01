@@ -339,6 +339,9 @@
       "expired": "Expired"
     }
   },
+  "newsletter": {
+    "success": "Thanks for subscribing!"
+  },
   "placeholders": {
     "password": "Password",
     "search": "Search",

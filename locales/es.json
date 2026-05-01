@@ -303,6 +303,9 @@
       "expired": "Vencida"
     }
   },
+  "newsletter": {
+    "success": "¡Gracias por suscribirte!"
+  },
   "placeholders": {
     "password": "Contraseña",
     "search": "Buscar",
