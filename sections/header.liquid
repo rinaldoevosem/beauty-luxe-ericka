@@ -37,7 +37,9 @@
   <button
     type="button"
     class="header-bar__menu-toggle"
+    on:click="#menu-drawer/showDialog"
     aria-label="Open menu"
+    aria-haspopup="dialog"
   >
     <span class="header-bar__icon" aria-hidden="true">
       {{ 'icon-burger.svg' | inline_asset_content }}
@@ -46,6 +48,9 @@
 
   <a href="{{ routes.root_url }}" class="header-bar__logo">{{ brand | escape }}</a>
 </div>
+
+{%- assign mobile_menu = linklists[section.settings.menu] -%}
+{% render 'menu-drawer', linklist: mobile_menu, brand: brand %}
 
 {%- if section.settings.show_search -%}
   <button
@@ -775,6 +780,13 @@
       "id": "brand_text",
       "label": "Brand wordmark",
       "default": "BEAUTY LUXE"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Mobile menu",
+      "default": "main-menu",
+      "info": "Linklist shown in the mobile menu drawer (hamburger button)."
     },
     {
       "type": "text",
