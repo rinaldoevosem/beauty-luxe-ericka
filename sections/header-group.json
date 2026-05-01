@@ -31,19 +31,14 @@
     "header_section": {
       "type": "header",
       "settings": {
-        "brand_text": "BEAUTY LUXE",
-        "search_placeholder": "Search",
-        "show_search": true,
-        "show_account": true,
-        "show_wishlist": true,
-        "wishlist_url": ""
+        "show_search": true
       }
     },
     "main_nav_section": {
       "type": "main-nav",
       "settings": {
         "menu": "main-menu"
-      } 
+      }
     }
   },
   "order": [

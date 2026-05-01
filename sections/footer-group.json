@@ -7,7 +7,7 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-{ 
+{
   "type": "footer",
   "name": "Footer",
   "sections": {
@@ -81,7 +81,8 @@
           "type": "_footer-link-column",
           "settings": {
             "heading": "SHOP",
-            "menu": "shop-menu"
+            "menu": "shop-menu",
+            "open_by_default_on_mobile": true
           },
           "blocks": {}
         },
@@ -89,7 +90,8 @@
           "type": "_footer-link-column",
           "settings": {
             "heading": "DISCOVER",
-            "menu": "discover"
+            "menu": "discover",
+            "open_by_default_on_mobile": false
           },
           "blocks": {}
         },
@@ -97,7 +99,8 @@
           "type": "_footer-link-column",
           "settings": {
             "heading": "CUSTOMER CARE",
-            "menu": "customer-menu"
+            "menu": "customer-menu",
+            "open_by_default_on_mobile": false
           },
           "blocks": {}
         },
@@ -105,7 +108,8 @@
           "type": "_footer-link-column",
           "settings": {
             "heading": "ACCOUNT",
-            "menu": "account"
+            "menu": "account",
+            "open_by_default_on_mobile": false
           },
           "blocks": {}
         }
