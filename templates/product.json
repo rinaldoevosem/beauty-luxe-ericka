@@ -276,7 +276,7 @@
               "settings": {
                 "about_title": "About the Product",
                 "ingredients_title": "Ingredients",
-                "ingredients_text": "<p>;l;l;l;</p>",
+                "ingredients_text": "<p><strong>Key ingredients:</strong> Talc, Mica, Silica, Magnesium Stearate,<br/>  Octyldodecyl Stearoyl Stearate, Caprylyl Glycol, Phenoxyethanol.</p><p><strong>May contain (+/-):</strong> Titanium Dioxide (CI 77891), Iron Oxides (CI  <br/>  77491, CI 77492, CI 77499).</p><p>Free from parabens, sulfates, and synthetic fragrance. Cruelty-free and<br/>  dermatologist-tested.</p><p><em>Always patch-test before use. Full INCI list printed on the product packaging <br/>  — refer to the label for the most up-to-date formulation.</em></p>",
                 "how_to_use_title": "How to Use",
                 "how_to_use_text": "<p>llll</p>",
                 "shipping_title": "Shipping & Returns",
