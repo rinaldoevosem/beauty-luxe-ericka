@@ -1236,6 +1236,7 @@ results-list[initialized] {
 /* stylelint-enable value-keyword-case */
 
 .dialog-drawer[open] {
+  width: 100%;
   --start-x: var(--custom-transform-from, 100%);
   --end-x: var(--custom-transform-to, 0px);
   --start-opacity: 1;
