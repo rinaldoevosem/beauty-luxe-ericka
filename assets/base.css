@@ -1481,6 +1481,10 @@ summary:hover {
   color: var(--color-primary-hover);
 }
 
+.footer-newsletter-links summary:hover {
+   color: var(--color-white-100);
+}
+
 summary .svg-wrapper {
   margin-inline-start: auto;
   height: var(--icon-size-xs);

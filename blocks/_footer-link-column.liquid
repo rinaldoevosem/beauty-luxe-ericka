@@ -5,6 +5,10 @@
   and a list of links pulled from a Shopify navigation menu (white-80 #D6D6D6,
   Outfit Light 14px, line-height 26px).
 
+  On mobile (<750px) the heading becomes a toggle that expands/collapses the
+  link list as a dropdown (chevron rotates). On desktop the column is always
+  expanded and the toggle is disabled.
+
   Configure the menu in Shopify admin → Online Store → Navigation, then select
   it in the block's "Menu" setting.
 
@@ -16,42 +20,62 @@
   assign block_settings = block.settings
   assign menu = block_settings.menu
   assign heading = block_settings.heading | default: menu.title
+  assign open_on_mobile = block_settings.open_by_default_on_mobile
 -%}
 
-<div class="footer-link-column" {{ block.shopify_attributes }}>
-  {%- if heading != blank -%}
-    <p class="footer-link-column__heading">{{ heading | escape }}</p>
-  {%- endif -%}
+<accordion-custom
+  class="footer-link-column"
+  open-by-default-on-desktop
+  {% if open_on_mobile %}open-by-default-on-mobile{% endif %}
+  data-disable-on-desktop="true"
+  {{ block.shopify_attributes }}
+>
+  <details class="footer-link-column__details" open>
+    <summary class="footer-link-column__heading">
+      <span class="footer-link-column__heading-text">{{ heading | escape }}</span>
+      <span class="footer-link-column__chevron svg-wrapper" aria-hidden="true">
+        {{- 'icon-chevron-down.svg' | inline_asset_content -}}
+      </span>
+    </summary>
 
-  {%- if menu != blank and menu.links.size > 0 -%}
-    <nav
-      class="footer-link-column__nav"
-      {%- if heading == blank %} aria-label="{{ menu.title | escape }}"{% endif -%}
-    >
-      <ul class="footer-link-column__list">
-        {%- for link in menu.links -%}
-          <li class="footer-link-column__item">
-            <a href="{{ link.url }}" class="footer-link-column__link">
-              {{- link.title | escape -}}
-            </a>
-          </li>
-        {%- endfor -%}
-      </ul>
-    </nav>
-  {%- endif -%}
-</div>
+    {%- if menu != blank and menu.links.size > 0 -%}
+      <nav
+        class="footer-link-column__nav"
+        {%- if heading == blank %} aria-label="{{ menu.title | escape }}"{% endif -%}
+      >
+        <ul class="footer-link-column__list">
+          {%- for link in menu.links -%}
+            <li class="footer-link-column__item">
+              <a href="{{ link.url }}" class="footer-link-column__link">
+                {{- link.title | escape -}}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+  </details>
+</accordion-custom>
 
 {% stylesheet %}
   .footer-link-column {
     display: flex;
     flex: 0 0 auto;
     flex-direction: column;
-    gap: var(--fluid-8-8);
     min-width: 0;
   }
 
+  .footer-link-column__details {
+    width: 100%;
+  }
+
   .footer-link-column__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--fluid-8-8);
     margin: 0;
+    padding: 0;
     /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Medium. */
     font-family: 'Outfit', var(--font-body--family);
     font-weight: 500;
@@ -60,6 +84,39 @@
     color: #FFFFFF;
     text-transform: uppercase;
     letter-spacing: 0.02em;
+    list-style: none;
+  }
+
+  .footer-link-column__heading::-webkit-details-marker {
+    display: none;
+  }
+
+  .footer-link-column__heading:focus-visible {
+    outline: 2px solid #FFFFFF;
+    outline-offset: 2px;
+  }
+
+  .footer-link-column__chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    color: #FFFFFF;
+    transition: transform 0.2s ease;
+  }
+
+  .footer-link-column__chevron svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .footer-link-column__details[open] > .footer-link-column__heading .footer-link-column__chevron {
+    transform: rotate(180deg);
+  }
+
+  .footer-link-column__nav {
+    margin-block-start: var(--fluid-8-8);
   }
 
   .footer-link-column__list {
@@ -84,6 +141,17 @@
   .footer-link-column__link:focus-visible {
     color: #FFFFFF;
   }
+
+  /* Desktop: heading acts as a static label, no toggle affordance. */
+  @media screen and (min-width: 750px) {
+    .footer-link-column__heading {
+      cursor: auto;
+    }
+
+    .footer-link-column__chevron {
+      display: none;
+    }
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -103,6 +171,13 @@
       "id": "menu",
       "label": "Menu",
       "info": "Select a navigation menu from Online Store → Navigation."
+    },
+    {
+      "type": "checkbox",
+      "id": "open_by_default_on_mobile",
+      "label": "Open by default on mobile",
+      "info": "Expands this column's links when the page first loads on mobile. Recommended for the first column only.",
+      "default": false
     }
   ]
 }
