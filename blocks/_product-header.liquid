@@ -54,13 +54,14 @@
     </div>
   </div>
 
+
+
+  {% content_for 'blocks' %} 
+
   {% content_for 'block',
     type: '_product-rating-badge',
     id: 'product-rating-badge'
-  %}
-
-  {% content_for 'blocks' %}
-
+  %} 
   {% content_for 'block',
     type: '_product-feature-tags',
     id: 'product-feature-tags',
@@ -71,19 +72,16 @@
     id: 'product-price-info',
     closest.product: closest.product
   %}
-  {% content_for 'block',
-    type: '_product-shipping-note',
-    id: 'product-shipping-note'
-  %}
-  {% content_for 'block',
-    type: '_product-subscribe-badge',
-    id: 'product-subscribe-badge'
-  %}
-  {% content_for 'block',
-    type: '_product-short-description',
-    id: 'product-short-description',
-    closest.product: closest.product
-  %}
+  <div class="product-header__inline-row">
+    {% content_for 'block',
+      type: '_product-subscribe-badge',
+      id: 'product-subscribe-badge'
+    %}
+    {% content_for 'block',
+      type: '_product-shipping-note',
+      id: 'product-shipping-note'
+    %}
+  </div>
 </div>
 
 {% stylesheet %}
@@ -100,6 +98,14 @@
     justify-content: space-between;
     gap: 0.5rem;
     width: 100%;
+  }
+
+  /* Subscribe pill + shipping note on the same row, per Figma. */
+  .product-header__inline-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
   }
 
   .product-header__brand {

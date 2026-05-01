@@ -28,13 +28,57 @@
       id: 'product-header',
       closest.product: closest.product
     %}
+
+    {% comment %}
+      Mobile-only gallery insert. The original media block is a sibling of
+      `_product-details` at the section level (rendered in `.product-information__media`),
+      so on mobile it appears above everything. To match the Figma mobile order
+      (gallery sits BETWEEN the product header info and the description), we
+      duplicate the gallery here and hide one or the other per viewport via CSS.
+    {% endcomment %}
+    <div class="product-details__mobile-only product-details__mobile-gallery">
+      {% render 'custom-product-gallery', product: closest.product %}
+    </div>
+
+    {% content_for 'block',
+      type: '_product-short-description',
+      id: 'product-short-description',
+      closest.product: closest.product
+    %}
+
     {% content_for 'blocks' %}
+
+    {% comment %}
+      Mobile-only accordion insert. Same rationale as the gallery — the original
+      accordion sits inside `.product-information__media` (under the desktop
+      gallery in the left column). On mobile we need it at the very end after
+      the variant pickers, so we render a second instance here and toggle
+      visibility with `display: none` per viewport.
+    {% endcomment %}
+    <div class="product-details__mobile-only product-details__mobile-accordion">
+      {% content_for 'block',
+        type: 'product-info-accordion',
+        id: 'product-info-accordion-mobile',
+        closest.product: closest.product
+      %}
+    </div>
   {% endcapture %}
 
   {% render 'group', children: children, settings: block_settings, shopify_attributes: block.shopify_attributes %}
 </div>
 
 {% stylesheet %}
+  /* Mobile-only inserts (gallery + accordion duplicated inside details). */
+  .product-details__mobile-only {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-details__mobile-only {
+      display: block;
+    }
+  }
+
   /* Clear padding on mobile, if not full-width */
   @media screen and (max-width: 749px) {
     .product-information.section--page-width .product-details > .group-block {

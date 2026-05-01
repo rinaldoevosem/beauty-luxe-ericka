@@ -319,4 +319,17 @@
   body:has(#header-group #header-component[data-sticky-state='active']) .product-details.sticky-content--desktop {
     --sticky-header-offset: var(--header-height);
   }
+
+  /* ─────────────────────────────────────────────────────────────────
+     Mobile (≤749px): hide the desktop media wrapper. The gallery and
+     accordion are re-rendered as mobile-only duplicates inside
+     `_product-details.liquid` (see `.product-details__mobile-only`),
+     interleaved between header info and merchant blocks per Figma.
+     Desktop (≥750px) layout is untouched.
+     ───────────────────────────────────────────────────────────────── */
+  @media screen and (max-width: 749px) {
+    .product-information .product-information__media {
+      display: none;
+    }
+  }
 {% endstylesheet %}
