@@ -89,7 +89,7 @@
           "type": "_footer-link-column",
           "settings": {
             "heading": "DISCOVER",
-            "menu": ""
+            "menu": "discover"
           },
           "blocks": {}
         },
