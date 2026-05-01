@@ -361,19 +361,25 @@
 
   .buy-buttons-block .product-details .quantity-selector,
   .buy-buttons-block .quantity-selector {
-    /* Non-palette color from Figma — quantity stepper border */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 7.8125rem; /* 125px */
     height: 3rem; /* 48px */
     flex: 0 0 7.8125rem;
     padding: 0;
+    /* Non-palette color from Figma — quantity stepper border */
     border: 1.5px solid #E7E7E7;
     border-radius: 50px;
     background-color: #FFFFFF;
+    overflow: hidden;
   }
 
   .buy-buttons-block .quantity-selector :is(.quantity-minus, .quantity-plus) {
-    width: 2.5rem;
+    flex: 0 0 auto;
+    width: 2.25rem; /* 36px */
     height: 100%;
+    padding: 0;
     /* Non-palette color from Figma — stepper icon color */
     color: #0A0A0A;
     border-radius: 50px;
@@ -391,15 +397,19 @@
   }
 
   .buy-buttons-block .quantity-selector input[type='number'] {
-    flex: 1 1 auto;
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
     max-width: none;
     height: 100%;
+    padding: 0;
     font-family: var(--font-accent--family);
     font-weight: 400;
     font-size: 1rem; /* Outfit Regular 16px */
     /* Non-palette color from Figma — stepper text color */
     color: #0A0A0A;
     background-color: transparent;
+    text-align: center;
   }
 
   /* b) Add to BAG — flex 1, 48px tall, pill, 1.5px #0A0A0A outline */

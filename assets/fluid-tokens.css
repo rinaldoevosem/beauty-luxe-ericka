@@ -18,4 +18,12 @@
   --fluid-28-28: clamp(28px, calc(28 / var(--fluid-base) * 100vw), calc(28 / var(--fluid-base) * var(--fluid-cap) * 1px));
   --fluid-32-32: clamp(32px, calc(32 / var(--fluid-base) * 100vw), calc(32 / var(--fluid-base) * var(--fluid-cap) * 1px));
   --fluid-16-80: clamp(16px, calc(80 / var(--fluid-base) * 100vw), calc(80 / var(--fluid-base) * var(--fluid-cap) * 1px));
+
+  /* Footer Newsletter + Link Columns */
+  --fluid-8-8: clamp(8px, calc(8 / var(--fluid-base) * 100vw), calc(8 / var(--fluid-base) * var(--fluid-cap) * 1px));
+  --fluid-16-16: clamp(16px, calc(16 / var(--fluid-base) * 100vw), calc(16 / var(--fluid-base) * var(--fluid-cap) * 1px));
+  --fluid-20-24: clamp(20px, calc(24 / var(--fluid-base) * 100vw), calc(24 / var(--fluid-base) * var(--fluid-cap) * 1px));
+  --fluid-24-40: clamp(24px, calc(40 / var(--fluid-base) * 100vw), calc(40 / var(--fluid-base) * var(--fluid-cap) * 1px));
+  --fluid-32-80: clamp(32px, calc(80 / var(--fluid-base) * 100vw), calc(80 / var(--fluid-base) * var(--fluid-cap) * 1px));
+  --fluid-40-48: clamp(40px, calc(48 / var(--fluid-base) * 100vw), calc(48 / var(--fluid-base) * var(--fluid-cap) * 1px));
 }
