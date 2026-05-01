@@ -97,7 +97,7 @@
           "type": "_footer-link-column",
           "settings": {
             "heading": "CUSTOMER CARE",
-            "menu": ""
+            "menu": "customer-menu"
           },
           "blocks": {}
         },
