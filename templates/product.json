@@ -298,7 +298,7 @@
           "settings": {
             "about_title": "About the Product",
             "ingredients_title": "Ingredients",
-            "ingredients_text": "",
+            "ingredients_text": "<p><strong>Key ingredients:</strong> Talc, Mica, Silica, Magnesium Stearate,<br/>  Octyldodecyl Stearoyl Stearate, Caprylyl Glycol, Phenoxyethanol.</p><p><strong>May contain (+/-):</strong> Titanium Dioxide (CI 77891), Iron Oxides (CI  <br/>  77491, CI 77492, CI 77499).</p><p>Free from parabens, sulfates, and synthetic fragrance. Cruelty-free and<br/>  dermatologist-tested.</p><p><em>Always patch-test before use. Full INCI list printed on the product packaging <br/>  — refer to the label for the most up-to-date formulation.</em></p>",
             "how_to_use_title": "How to Use",
             "how_to_use_text": "<p><strong>1. Prep.</strong> Apply your foundation and concealer as usual. Wait 30–60<br/>   seconds for the formula to settle.</p><p><strong>2. Bake.</strong> Pick up a generous amount of powder with a damp sponge  <br/>  and press (don't sweep) into areas you want to brighten — under the eyes, the bridge <br/>  of the nose, the chin, and the cupid's bow.</p><p><strong>3. Set.</strong> Let the powder sit for 5–10 minutes while you finish the <br/>  rest of your makeup, then dust off the excess with a fluffy brush.</p><p><strong>Pro tip:</strong> Use a smaller amount on bare skin throughout the day to <br/>  control shine without disturbing your base.</p>",
             "shipping_title": "Shipping & Returns",
@@ -316,7 +316,7 @@
         "enable_sticky_add_to_cart": true,
         "color_scheme": "",
         "padding-block-start": 0,
-        "padding-block-end": 0
+        "padding-block-end": 39
       }
     },
     "product_recommendations_qggXJq": {
