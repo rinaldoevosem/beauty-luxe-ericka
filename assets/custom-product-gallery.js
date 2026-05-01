@@ -6,6 +6,7 @@ import { Component } from '@theme/component';
  * @property {HTMLButtonElement[]} thumbs
  * @property {HTMLElement} slidesList
  * @property {HTMLElement[]} slides
+ * @property {HTMLButtonElement[]} [dots]
  * @property {HTMLButtonElement} [prevButton]
  * @property {HTMLButtonElement} [nextButton]
  * @property {HTMLElement} [counterCurrent]
@@ -43,6 +44,12 @@ class CustomProductGallery extends Component {
     this.#goTo(target);
   }
 
+  handleDotClick(event, index) {
+    const target = parseInt(index, 10);
+    if (Number.isNaN(target)) return;
+    this.#goTo(target);
+  }
+
   handlePrev() {
     const next = (this.#currentIndex - 1 + this.#mediaCount) % this.#mediaCount;
     this.#goTo(next);
@@ -60,6 +67,7 @@ class CustomProductGallery extends Component {
 
     this.#updateActiveSlide();
     this.#updateActiveThumb();
+    this.#updateActiveDot();
     this.#updateCounter();
 
     if (this.#isMobile && this.refs.slides && this.refs.slides[index]) {
@@ -93,6 +101,19 @@ class CustomProductGallery extends Component {
     });
   }
 
+  #updateActiveDot() {
+    if (!this.refs.dots) return;
+    this.refs.dots.forEach((dot, i) => {
+      const isActive = i === this.#currentIndex;
+      dot.classList.toggle('is-active', isActive);
+      if (isActive) {
+        dot.setAttribute('aria-current', 'true');
+      } else {
+        dot.removeAttribute('aria-current');
+      }
+    });
+  }
+
   #updateCounter() {
     if (this.refs.counterCurrent) {
       this.refs.counterCurrent.textContent = String(this.#currentIndex + 1);
@@ -102,13 +123,17 @@ class CustomProductGallery extends Component {
   #handleScroll() {
     if (!this.refs.slidesList) return;
     const list = this.refs.slidesList;
-    const slideWidth = list.clientWidth;
+    /* Mobile slides are 80% width (peek of next slide visible). Use the actual
+       slide element width so the index calculation matches the snap point. */
+    const slide = this.refs.slides && this.refs.slides[0];
+    const slideWidth = slide ? slide.getBoundingClientRect().width : list.clientWidth;
     if (slideWidth === 0) return;
     const newIndex = Math.round(list.scrollLeft / slideWidth);
     if (newIndex !== this.#currentIndex && newIndex >= 0 && newIndex < this.#mediaCount) {
       this.#currentIndex = newIndex;
       this.dataset.currentIndex = String(newIndex);
       this.#updateActiveThumb();
+      this.#updateActiveDot();
       this.#updateCounter();
     }
   }

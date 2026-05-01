@@ -159,6 +159,29 @@
         </div>
       {%- endif -%}
     </div>
+
+    {%- liquid
+      assign caption_text = product.metafields.custom.size_note
+    -%}
+    {%- if caption_text != blank -%}
+      <p class="custom-gallery__caption">{{ caption_text }}</p>
+    {%- endif -%}
+
+    {%- if media_count > 1 -%}
+      <div class="custom-gallery__dots" role="tablist" aria-label="{{ 'accessibility.pagination' | t: default: 'Gallery pagination' }}">
+        {%- for media in media_items -%}
+          <button
+            type="button"
+            class="custom-gallery__dot {% if forloop.first %}is-active{% endif %}"
+            ref="dots[]"
+            data-index="{{ forloop.index0 }}"
+            on:click="/handleDotClick/{{ forloop.index0 }}"
+            aria-label="{{ 'accessibility.go_to_slide' | t: default: 'Go to slide', index: forloop.index }}"
+            {% if forloop.first %}aria-current="true"{% endif %}
+          ></button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
   </custom-product-gallery>
 
   <script src="{{ 'custom-product-gallery.js' | asset_url }}" type="module"></script>
@@ -450,6 +473,49 @@
     letter-spacing: 0.02em;
   }
 
+  /* ---------- Caption (Figma: "Size 0.21oz" below gallery, mobile only) ---------- */
+  .custom-gallery__caption {
+    display: none;
+    margin: 0;
+    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
+    font-family: 'Outfit', var(--font-body--family);
+    font-weight: 300;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    text-align: left;
+  }
+
+  /* ---------- Pagination dots (Figma: below caption, centered, mobile only) ---------- */
+  .custom-gallery__dots {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .custom-gallery__dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    background-color: #D4D4D4;
+    border: 0;
+    border-radius: 500px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .custom-gallery__dot:hover {
+    background-color: #6C6C6C;
+  }
+
+  .custom-gallery__dot.is-active {
+    background-color: #0A0A0A;
+    transform: scale(1.1);
+  }
+
   /* ---------- Mobile (< 750px): horizontal swipe carousel ---------- */
   @media screen and (max-width: 749px) {
     .custom-gallery {
@@ -486,16 +552,27 @@
     .custom-gallery__slide {
       position: relative;
       inset: auto;
-      flex: 0 0 100%;
-      width: 100%;
+      /* Show ~80% of the active slide and a peek of the next slide on the right,
+         matching Figma's "main image + side strip" mobile layout. */
+      flex: 0 0 80%;
+      width: 80%;
       height: 100%;
       opacity: 1;
       visibility: visible;
       scroll-snap-align: start;
     }
 
-    .custom-gallery__arrow {
+    /* Hide the left/prev arrow on mobile (Figma shows only the right arrow). */
+    .custom-gallery__arrow--prev {
       display: none;
+    }
+
+    /* Keep the right/next arrow visible per Figma mobile spec. */
+    .custom-gallery__arrow--next {
+      display: flex;
+      width: 36px;
+      height: 36px;
+      right: 12px;
     }
 
     .custom-gallery__most-loved {
@@ -508,10 +585,18 @@
       font-size: 11px;
     }
 
+    /* Hide the "1/5" counter overlay on mobile — dots replace it per Figma. */
     .custom-gallery__counter {
-      right: 12px;
-      bottom: 12px;
-      padding: 4px 12px;
+      display: none;
+    }
+
+    /* Show caption + dots only on mobile per Figma. */
+    .custom-gallery__caption {
+      display: block;
+    }
+
+    .custom-gallery__dots {
+      display: flex;
     }
   }
 {% endstylesheet %}

@@ -61,15 +61,15 @@
   {% content_for 'block',
     type: '_product-rating-badge',
     id: 'product-rating-badge'
-  %} 
-  {% content_for 'block',
-    type: '_product-feature-tags',
-    id: 'product-feature-tags',
-    closest.product: closest.product
   %}
   {% content_for 'block',
     type: '_product-price-info',
     id: 'product-price-info',
+    closest.product: closest.product
+  %}
+  {% content_for 'block',
+    type: '_product-feature-tags',
+    id: 'product-feature-tags',
     closest.product: closest.product
   %}
   <div class="product-header__inline-row">
