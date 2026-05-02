@@ -38,13 +38,14 @@ class CustomProductGallery extends Component {
     }
   }
 
-  handleThumbClick(event, index) {
+
+  handleThumbClick(index, _event) {
     const target = parseInt(index, 10);
     if (Number.isNaN(target)) return;
     this.#goTo(target);
   }
 
-  handleDotClick(event, index) {
+  handleDotClick(index, _event) {
     const target = parseInt(index, 10);
     if (Number.isNaN(target)) return;
     this.#goTo(target);
