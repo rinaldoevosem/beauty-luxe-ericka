@@ -7,10 +7,18 @@ import { Component } from '@theme/component';
  * @property {HTMLElement} slidesList
  * @property {HTMLElement[]} slides
  * @property {HTMLButtonElement[]} [dots]
+ * @property {HTMLElement} [captionSlot]
  * @property {HTMLButtonElement} [prevButton]
  * @property {HTMLButtonElement} [nextButton]
  * @property {HTMLElement} [counterCurrent]
  */
+
+/**
+ * Pattern to identify a "size note" text block on the page (e.g. "Size 0.21oz",
+ * "Size 50 ml", "Size 1.5 fl"). Used to auto-detect the merchant's text block
+ * and clone it under the gallery hero on mobile.
+ */
+const SIZE_NOTE_REGEX = /^Size\s+\d+(\.\d+)?\s*(oz|ml|g|kg|fl)\b/i;
 
 /** @extends {Component<CustomProductGalleryRefs>} */
 class CustomProductGallery extends Component {
@@ -29,6 +37,8 @@ class CustomProductGallery extends Component {
       this.#scrollListener = this.#handleScroll.bind(this);
       this.refs.slidesList.addEventListener('scroll', this.#scrollListener, { passive: true });
     }
+
+    this.#flagDuplicateCaptionElements();
   }
 
   disconnectedCallback() {
@@ -119,6 +129,34 @@ class CustomProductGallery extends Component {
     if (this.refs.counterCurrent) {
       this.refs.counterCurrent.textContent = String(this.#currentIndex + 1);
     }
+  }
+
+  /**
+   * Find the merchant's "Size 0.21oz" text block on the page (matched by
+   * regex on its text content), clone it into the gallery's caption slot
+   * (so it appears below the hero on mobile), and tag the original so CSS
+   * hides it on mobile only. Desktop keeps the original in its merchant-
+   * configured position.
+   */
+  #flagDuplicateCaptionElements() {
+    if (!this.refs.captionSlot) return;
+
+    const candidates = document.querySelectorAll('rte-formatter, .text-block');
+    let original = null;
+    for (const el of candidates) {
+      if (this.contains(el)) continue;
+      if (SIZE_NOTE_REGEX.test(el.textContent.trim())) {
+        original = el;
+        break;
+      }
+    }
+    if (!original) return;
+
+    /* Clone first so the clone doesn't inherit the hide-on-mobile class. */
+    const clone = original.cloneNode(true);
+    this.refs.captionSlot.replaceChildren(clone);
+
+    original.classList.add('custom-gallery__caption-original-hidden-mobile');
   }
 
   #handleScroll() {

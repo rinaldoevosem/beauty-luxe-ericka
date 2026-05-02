@@ -160,12 +160,13 @@
       {%- endif -%}
     </div>
 
-    {%- liquid
-      assign caption_text = product.metafields.custom.size_note
-    -%}
-    {%- if caption_text != blank -%}
-      <p class="custom-gallery__caption">{{ caption_text }}</p>
-    {%- endif -%}
+    {%- comment -%}
+      Slot where JS clones the merchant's "Size 0.21oz" text block (matched by
+      regex on text content). The clone is visible only on mobile via CSS;
+      the original block stays visible on desktop in its merchant-configured
+      position.
+    {%- endcomment -%}
+    <div class="custom-gallery__caption-slot" ref="captionSlot"></div>
 
     {%- if media_count > 1 -%}
       <div class="custom-gallery__dots" role="tablist" aria-label="{{ 'accessibility.pagination' | t: default: 'Gallery pagination' }}">
@@ -473,17 +474,29 @@
     letter-spacing: 0.02em;
   }
 
-  /* ---------- Caption (Figma: "Size 0.21oz" below gallery, mobile only) ---------- */
-  .custom-gallery__caption {
+  /* ---------- Caption slot (JS-cloned size note from merchant text block) ----------
+     Slot is empty until JS finds a matching "Size X oz/ml/etc" text block on the
+     page and clones it inside. The clone is hidden on desktop and shown on mobile
+     to match the Figma layout where the size note moves below the gallery. */
+  .custom-gallery__caption-slot {
     display: none;
+  }
+
+  .custom-gallery__caption-slot > * {
     margin: 0;
-    /* RULE EXCEPTION: project pattern — body font setting is Jost, but spec requires Outfit Light. */
-    font-family: 'Outfit', var(--font-body--family);
-    font-weight: 300;
-    font-size: 0.8125rem;
-    line-height: 1.5;
-    color: var(--color-text-muted);
     text-align: left;
+  }
+
+  @media screen and (max-width: 749px) {
+    .custom-gallery__caption-slot:not(:empty) {
+      display: block;
+    }
+
+    /* Original merchant text block (matched and tagged by JS) hides on mobile
+       so the cloned copy inside the gallery is the only visible instance. */
+    .custom-gallery__caption-original-hidden-mobile {
+      display: none !important;
+    }
   }
 
   /* ---------- Pagination dots (Figma: below caption, centered, mobile only) ---------- */
